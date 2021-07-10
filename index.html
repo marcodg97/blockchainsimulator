@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Blockchain Simulator</title>
-		
+
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
@@ -209,12 +209,10 @@ for(let i=0; i<21; i++) {
 		.attr('x2', (i+1)*NODE_WIDTH+20)
 		.attr('y2', 200)
 		.attr('style','stroke:rgb(0,0,0)')
-	g.append('line')
-		.attr('x1', i*NODE_WIDTH)
-		.attr('y1', 200)
-		.attr('x2', (i+1)*NODE_WIDTH+20)
-		.attr('y2', 0)
-		.attr('style','stroke:rgb(0,0,0)')
+	g.append('path')
+		.attr('d', 'M'+(i*NODE_WIDTH)+',200 C'+((i+1)*NODE_WIDTH)+',200 '+(i*NODE_WIDTH)+',0 '+((i+1)*NODE_WIDTH)+',0')
+		.attr('stroke','black')
+		.attr('fill', 'transparent')
 		
 	g.append('circle')
 		.attr('cx', i*NODE_WIDTH)
