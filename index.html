@@ -10,54 +10,10 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
 
+		<link rel="stylesheet" href="assets/css/style.css">
+
 		<script src="https://d3js.org/d3.v7.js"></script>
 	</head>
-
-<style>
-	svg {
-		width: 100%;
-		height: 90vh;
-	}
-
-	.slidecontainer {
-		width:100%;
-	}
-
-	.slider {
-		-webkit-appearance: none;
-		appearance: none;
-		width: 100%;
-		height: 100%;
-		background: #ccc;
-		border-radius: 5px;
-		outline: none;
-		opacity: 0.7;
-		-webkit-transition: .2s;
-		transition: opacity .2s;
-	}
-
-	.slider:hover {
-		opacity: 1;
-	}
-
-	.slider::-webkit-slider-thumb {
-		-webkit-appearance: none;
-		appearance: none;
-		width: 25px;
-		height: 25px;
-		border-radius: 50%;
-		background: #007bff;
-		cursor: pointer;
-	}
-
-	.slider::-moz-range-thumb {
-		width: 25px;
-		height: 25px;
-		border-radius: 50%;
-		background: #007bff;
-		cursor: pointer;
-	}
-</style>
 
 <body scroll='no' class="hold-transition sidebar-mini" style='overflow: hidden;'>
 <div class="wrapper">
@@ -175,66 +131,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
 
-<script>
+<script src="assets/js/main.js"></script>
 
-const NODE_WIDTH = 100;
-
-const width = document.body.clientWidth;
-const height = document.body.clientHeight;
-
-console.log(width, height);
-
-const svg = d3.select('svg');
-const g = svg.append('g');
-
-svg.call(d3.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.1, 5]).on("zoom", zoomed));
-
-let lastTranslate = undefined;
-
-function zoomed({transform}) {
-	let actualModule = transform.x % 100;
-	if(actualModule === 0) {
-		console.log('renderizza livello verso '+(lastTranslate < transform.x ? 'sinistra':'destra'));
-	} else {
-		lastTranslate = transform.x;
-	}
-
-	g.attr("transform", transform);
-}
-
-for(let i=0; i<21; i++) {
-	g.append('line')
-		.attr('x1', i*NODE_WIDTH+30)
-		.attr('y1', 200)
-		.attr('x2', (i+1)*NODE_WIDTH+20)
-		.attr('y2', 200)
-		.attr('style','stroke:rgb(0,0,0)')
-	g.append('path')
-		.attr('d', 'M'+(i*NODE_WIDTH)+',200 C'+((i+1)*NODE_WIDTH)+',200 '+(i*NODE_WIDTH)+',0 '+((i+1)*NODE_WIDTH)+',0')
-		.attr('stroke','black')
-		.attr('fill', 'transparent')
-		
-	g.append('circle')
-		.attr('cx', i*NODE_WIDTH)
-		.attr('cy', 200)
-		.attr('r', 30)
-		.style('fill', '#68b2a1')
-		.on('mouseover', (event) => {
-			event.srcElement.style.fill = "red";
-		})
-		.on('mouseout', (event) => {
-			event.srcElement.style.fill = "#68b2a1";
-		})
-
-	g.append('circle')
-		.attr('cx', i*NODE_WIDTH)
-		.attr('cy', 0)
-		.attr('r', 30)
-		.style('fill', '#68b2a1')
-		.on('mouseover', (event) => {console.log(event);})
-
-}
-
-</script>
 </body>
 </html>
