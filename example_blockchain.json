@@ -1,19 +1,58 @@
 {
 	"heights": {
-		"1":["a"],
-		"2":["b"],
-		"3":["c,d"],
-		"4":["e"]
+		"0":["a"],
+		"1":["b"],
+		"2":["c"],
+		"3":["d","e"],
+		"4":["f"]
 	}, "blocks": {
 		"a": {
-			"next":["b"],
-			"pred":[],
-			"value":1000
+			"id":"a",
+			"altezza":0,
+			"padre":null,
+			"figlio1":"b",
+			"figlio2":null,
+			"valore":1000
 		},
 		"b": {
-			"next":["c","d"],
-			"pred":["a"],
-			"value": 1100
+			"id":"b",
+			"altezza":1,
+			"padre":"a",
+			"figlio1":"c",
+			"figlio2":null,
+			"valore":1100
+		},
+		"c": {
+			"id":"c",
+			"altezza":2,
+			"padre":"b",
+			"figlio1":"d",
+			"figlio2":"e",
+			"valore":1200
+		},
+		"d": {
+			"id":"c",
+			"altezza":3,
+			"padre":"c",
+			"figlio1":"f",
+			"figlio2":null,
+			"valore":1300
+		},
+		"e": {
+			"id":"e",
+			"altezza":3,
+			"padre":"c",
+			"figlio1":null,
+			"figlio2":null,
+			"valore":1300
+		},
+		"f": {
+			"id":"f",
+			"altezza":4,
+			"padre":"d",
+			"figlio1":"g",
+			"figlio2":null,
+			"valore":1400
 		}
 	}
 }
