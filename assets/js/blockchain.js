@@ -9,6 +9,7 @@ class Blockchain {
 		this.forks = [];
 
 		this.dimensions = 100;
+		this.offset = 0;
 	}
 
 	clear() {
@@ -172,27 +173,31 @@ class Blockchain {
 
 				}
 			}
+
+			this.offset = to-from;
+
 		} else {
+
 			for(let i=from; i<to; i++) {
 				for(let j=0; j<this.chain.heights[i].length; j++) {
 					let block = this['chain']['blocks'][this.chain.heights[i][j]];
 
 					if(block.next1 !== null)
 						svg.append('line')
-							.attr('x1', i*this.dimensions)
+							.attr('x1', (this.offset)*this.dimensions)
 							.attr('y1', block.render_height)
-							.attr('x2', (i+1)*this.dimensions)
+							.attr('x2', (this.offset+1)*this.dimensions)
 							.attr('y2', block.render_height)
 							.attr('style', 'stroke:#000')
 
 					if(block.next2 !== null)
 						svg.append('path')
-							.attr('d', 'M'+(i*this.dimensions)+','+block.render_height+' C'+((i+1)*this.dimensions)+','+block.render_height+' '+(i*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+							.attr('d', 'M'+(this.offset*this.dimensions)+','+block.render_height+' C'+((this.offset+1)*this.dimensions)+','+block.render_height+' '+(this.offset*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((this.offset+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
 							.attr('stroke','black')
 							.attr('fill', 'transparent')
 
 					svg.append('circle')
-						.attr('cx', i*this.dimensions)
+						.attr('cx', (this.offset)*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
 						.style('fill', '#68b2a1')
@@ -200,13 +205,17 @@ class Blockchain {
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
 
 					svg.append('text')
-						.attr('x', i*this.dimensions)
+						.attr('x', (this.offset)*this.dimensions)
 						.attr('y', block.render_height)
 						.html(block.id)
 
 				}
+
+				this.offset +=1;
 			}
+
 		}
+
 	}
 
 }
