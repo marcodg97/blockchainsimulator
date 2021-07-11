@@ -87,7 +87,7 @@ class Blockchain {
 						block.next2 = id;
 						this['chain']['blocks'][id.toString()] = next2;
 						this.chain.heights[h+1].push(id.toString());
-						this.forks.push(h);
+						this.forks.push(h+1);
 						id += 1;
 					}
 
@@ -229,6 +229,20 @@ class Blockchain {
 
 		}
 
+	}
+
+	removeFirst(toRemove) {
+		for(let i=this.renderized_from; i<this.renderized_from+toRemove; i++)
+			d3.select('#height-'+i).remove();
+
+		this.renderized_from += toRemove;
+	}
+
+	removeLast(toRemove) {
+		for(let i=this.renderized_to; i<this.renderized_to-toRemove; i--)
+			d3.select('#height-'+i).remove();
+
+		this.renderized_to -= toRemove;
 	}
 
 }
