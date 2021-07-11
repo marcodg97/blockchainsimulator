@@ -10,8 +10,7 @@ var identificatore = 1
 var altezza = 0
 
 var radice = {id: identificatore ,altezza: altezza, padre: null, figlio1: null,valore: tot}
-blocco[altezza] = []
-blocco[altezza].push(radice)
+blocco[altezza] = [radice]
 
 identificatore = identificatore + 1
 blocks.push(radice)
@@ -67,7 +66,7 @@ while (identificatore < number+1){
 
 for (let i=0;blocco[i];i++) {
 	for (let j=0;blocco[i][j];j++)
-	console.log(i+' -- '+j+": "+blocco[i][j]['id']+" padre:"+blocco[i][j]['padre']+" f1:"+blocco[i][j]['figlio1']+" f2:"+blocco[i][j]['figlio2'])
+		console.log(i+' -- '+j+": "+blocco[i][j]['id']+" padre:"+blocco[i][j]['padre']+" f1:"+blocco[i][j]['figlio1']+" f2:"+blocco[i][j]['figlio2'])
 }
 console.log(identificatore-1,"blocchi  -  valore:",tot,"$")
 	
