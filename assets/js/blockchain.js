@@ -7,9 +7,9 @@ class Blockchain {
 		};
 
 		this.forks = [];
-
 		this.dimensions = 100;
 		this.offset = 0;
+		this.renderized_from = this.renderized_to = undefined;
 	}
 
 	clear() {
@@ -140,6 +140,8 @@ class Blockchain {
 		if(clearBefore) {
 			svg.html('');
 
+			this.offset = from;
+
 			for(let i=from; i<to; i++) {
 				for(let j=0; j<this.chain.heights[i].length; j++) {
 					let block = this['chain']['blocks'][this.chain.heights[i][j]];
@@ -174,7 +176,9 @@ class Blockchain {
 				}
 			}
 
-			this.offset = to-from;
+			//this.offset = to-from;
+			this.renderized_from = from;
+			this.renderized_to = to;
 
 		} else {
 
@@ -184,20 +188,20 @@ class Blockchain {
 
 					if(block.next1 !== null)
 						svg.append('line')
-							.attr('x1', (this.offset)*this.dimensions)
+							.attr('x1', (i-this.offset)*this.dimensions)
 							.attr('y1', block.render_height)
-							.attr('x2', (this.offset+1)*this.dimensions)
+							.attr('x2', (i-this.offset+1)*this.dimensions-(this.dimensions/5))
 							.attr('y2', block.render_height)
 							.attr('style', 'stroke:#000')
 
 					if(block.next2 !== null)
 						svg.append('path')
-							.attr('d', 'M'+(this.offset*this.dimensions)+','+block.render_height+' C'+((this.offset+1)*this.dimensions)+','+block.render_height+' '+(this.offset*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((this.offset+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+							.attr('d', 'M'+((i-this.offset)*this.dimensions)+','+block.render_height+' C'+((i-this.offset+1)*this.dimensions)+','+block.render_height+' '+((i-this.offset)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i-this.offset+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
 							.attr('stroke','black')
 							.attr('fill', 'transparent')
 
 					svg.append('circle')
-						.attr('cx', (this.offset)*this.dimensions)
+						.attr('cx', (i-this.offset)*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
 						.style('fill', '#68b2a1')
@@ -205,14 +209,16 @@ class Blockchain {
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
 
 					svg.append('text')
-						.attr('x', (this.offset)*this.dimensions)
+						.attr('x', (i-this.offset)*this.dimensions)
 						.attr('y', block.render_height)
 						.html(block.id)
 
 				}
 
-				this.offset +=1;
+				//this.offset +=1;
 			}
+
+			this.renderized_to += to-from;
 
 		}
 
