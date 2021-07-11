@@ -133,47 +133,78 @@ class Blockchain {
 	/***************************************************************************************************/
 
 	render(svg, from = 0, to = 100, clearBefore = true) {
-		if(clearBefore)
-			svg.html('');
-
 		if(to > this.chain.heights.length)
 			to = this.chain.heights.length;
 
-		for(let i=from; i<to; i++) {
-			for(let j=0; j<this.chain.heights[i].length; j++) {
-				let block = this['chain']['blocks'][this.chain.heights[i][j]];
+		if(clearBefore) {
+			svg.html('');
 
-				if(block.next1 !== null)
-					svg.append('line')
-						.attr('x1', i*this.dimensions)
-						.attr('y1', block.render_height)
-						.attr('x2', (i+1)*this.dimensions)
-						.attr('y2', block.render_height)
-						.attr('style', 'stroke:#000')
+			for(let i=from; i<to; i++) {
+				for(let j=0; j<this.chain.heights[i].length; j++) {
+					let block = this['chain']['blocks'][this.chain.heights[i][j]];
 
-				if(block.next2 !== null)
-					svg.append('path')
-						.attr('d', 'M'+(i*this.dimensions)+','+block.render_height+' C'+((i+1)*this.dimensions)+','+block.render_height+' '+(i*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
-						.attr('stroke','black')
-						.attr('fill', 'transparent')
+					if(block.next1 !== null)
+						svg.append('line')
+							.attr('x1', (i-from)*this.dimensions)
+							.attr('y1', block.render_height)
+							.attr('x2', (i-from+1)*this.dimensions)
+							.attr('y2', block.render_height)
+							.attr('style', 'stroke:#000')
 
-				svg.append('circle')
-					.attr('cx', i*this.dimensions)
-					.attr('cy', block.render_height)
-					.attr('r', this.dimensions/5)
-					.style('fill', '#68b2a1')
-					.on('mouseover', (event) => {
-						event.srcElement.style.fill = "red";
-					})
-					.on('mouseout', (event) => {
-						event.srcElement.style.fill = "#68b2a1";
-					})
+					if(block.next2 !== null)
+						svg.append('path')
+							.attr('d', 'M'+((i-from)*this.dimensions)+','+block.render_height+' C'+((i-from+1)*this.dimensions)+','+block.render_height+' '+((i-from)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i-from+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+							.attr('stroke','black')
+							.attr('fill', 'transparent')
 
-				svg.append('text')
-					.attr('x', i*this.dimensions)
-					.attr('y', block.render_height)
-					.html(block.id)
+					svg.append('circle')
+						.attr('cx', (i-from)*this.dimensions)
+						.attr('cy', block.render_height)
+						.attr('r', this.dimensions/5)
+						.style('fill', '#68b2a1')
+						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
 
+					svg.append('text')
+						.attr('x', (i-from)*this.dimensions)
+						.attr('y', block.render_height)
+						.html(block.id)
+
+				}
+			}
+		} else {
+			for(let i=from; i<to; i++) {
+				for(let j=0; j<this.chain.heights[i].length; j++) {
+					let block = this['chain']['blocks'][this.chain.heights[i][j]];
+
+					if(block.next1 !== null)
+						svg.append('line')
+							.attr('x1', i*this.dimensions)
+							.attr('y1', block.render_height)
+							.attr('x2', (i+1)*this.dimensions)
+							.attr('y2', block.render_height)
+							.attr('style', 'stroke:#000')
+
+					if(block.next2 !== null)
+						svg.append('path')
+							.attr('d', 'M'+(i*this.dimensions)+','+block.render_height+' C'+((i+1)*this.dimensions)+','+block.render_height+' '+(i*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+							.attr('stroke','black')
+							.attr('fill', 'transparent')
+
+					svg.append('circle')
+						.attr('cx', i*this.dimensions)
+						.attr('cy', block.render_height)
+						.attr('r', this.dimensions/5)
+						.style('fill', '#68b2a1')
+						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+
+					svg.append('text')
+						.attr('x', i*this.dimensions)
+						.attr('y', block.render_height)
+						.html(block.id)
+
+				}
 			}
 		}
 	}
