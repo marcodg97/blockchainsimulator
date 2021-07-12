@@ -6,9 +6,11 @@ var identificatore = 0
 blocks = []
 blocco = {}
 biforcazioni = []
+grafico = []
 var t = 0
 var minVal=9999999
 var maxVal=0
+
 
 function compute(probability, number){
 	var tot = 10.0 * number
@@ -19,7 +21,8 @@ function compute(probability, number){
 	var radice = {id: identificatore ,altezza: altezza, padre: null, figlio1: null,valore: tot, master: true}
 	blocco[altezza] = []
 	blocco[altezza].push(radice['id'])
-
+	temp = {id: identificatore, valore: tot}
+	grafico.push(temp)
 	identificatore = identificatore + 1
 	blocks.push(radice)
 	while (identificatore < number){
@@ -35,6 +38,8 @@ function compute(probability, number){
 				if (tot>maxVal) {maxVal = tot}
 				if (tot<minVal) {minVal = tot}
 				son1 = {id: identificatore,altezza: altezza+1,padre: b['id'], figlio1: null,figlio2: null,valore: tot, master: true}
+				temp = {id: identificatore, valore: tot}
+				grafico.push(temp)
 				identificatore = identificatore+1
 				blocks.push(son1)
 				blocco[altezza+1].push(son1['id'])
@@ -362,7 +367,7 @@ function drawLine(dens) {
     
 
     svg.append("path")
-      .datum(blocks)
+      .datum(grafico)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
