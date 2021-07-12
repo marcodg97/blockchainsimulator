@@ -249,6 +249,9 @@ class Blockchain {
 		if(clearBefore) {
 			svg.html('');
 
+			this.renderized_from = this.offset = from;
+			this.renderized_to = to;
+
 			for(let i=from; i<to; i++) {
 
 				g = svg.append('g').attr('id','height-'+i);
@@ -289,10 +292,13 @@ class Blockchain {
 				}
 			}
 
-			this.renderized_from = this.offset = from;
-			this.renderized_to = to;
-
 		} else {
+
+			if(this.renderized_from > from)
+				this.renderized_from = from;
+
+			if(this.renderized_to < to)
+				this.renderized_to = to;
 
 			for(let i=from; i<to; i++) {
 
@@ -333,12 +339,6 @@ class Blockchain {
 
 				}
 			}
-
-			if(this.renderized_from > from)
-				this.renderized_from = from;
-
-			if(this.renderized_to < to)
-				this.renderized_to = to;
 
 		}
 

@@ -67,12 +67,21 @@
 					<!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
 					<li class="nav-item menu-open">
 						<a href="#" class="nav-link active">
-							<i class="nav-icon fas fa-sliders-h"></i>
-							<p>Settings<i class="right fas fa-angle-left"></i></p>
+							<i class="nav-icon fas fa-cubes"></i>
+							<p>Generator<i class="right fas fa-angle-left"></i></p>
 						</a>
 						<ul class="nav nav-treeview">
 							<li class="nav-item">
-								<div class="nav-link active">
+								<div class="nav-link">
+									<i class="fas fa-dice-d6"></i>
+									<p>Number of blocks</p>
+									<div class="slidecontainer">
+										<input class="form-control form-control-sm" type="number" id='block-numbers' min='100' placeholder='100'>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item">
+								<div class="nav-link">
 									<i class="fas fa-code-branch"></i>
 									<p id='fork-prob-text'>Fork probability (1 of 50000)</p>
 									<div class="slidecontainer">
@@ -80,13 +89,23 @@
 									</div>
 								</div>
 							</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link" onclick="computeAndRender(600000, 200);">
+									<i id='generate_icon' class="text-danger nav-icon far fa-play-circle"></i>
+									<p>Make new blockchain</p>
+								</a>
+							</li>
 						</ul>
 					</li>
+					<hr/>
 					<li class="nav-item">
-						<a href="#" class="nav-link" onclick="computeAndRender(600000, 200);">
-							<i id='generate_icon' class="text-danger nav-icon far fa-play-circle"></i>
-							<p>Generate</p>
-						</a>
+						<div class="nav-link">
+							<i class="fas fa-level-up-alt"></i>
+							<p>Go to height</p>
+							<div class="slidecontainer">
+								<input id='goto-height' class="form-control form-control-sm" type="number" id='block-numbers' min='0'>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</nav>
