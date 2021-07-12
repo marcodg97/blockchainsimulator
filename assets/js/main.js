@@ -3,46 +3,57 @@ const height = document.body.clientHeight;
 
 const svg = d3.select('svg');
 const g = svg.append('g');
+const RENDERING_WINDOW = 100;
 
 const blockchain = new Blockchain();
 
 /*********************************************************************************************************/
 
+var forkProbability = 50000;
+
 svg.call(d3.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.1, 5]).on("zoom", zoomed));
+
+d3.select('#fork-prob-range').on('change', (event) => {
+	d3.select('#fork-prob-text').html('Fork probability (1 of '+event.srcElement.value+')');
+	forkProbability = event.srcElement.value;
+});
 
 let lastTranslate = 0;
 function zoomed({transform}) {
-	if(-1*transform.x > lastTranslate+blockchain.dimensions) {
+	let x = -1*transform.x;
 
-		console.log('renderizza livello verso destra');
-		lastTranslate = (-1*transform.x)+blockchain.dimensions;
+	if(x > lastTranslate+blockchain.dimensions) {
+
+		lastTranslate = x+blockchain.dimensions;
 
 		blockchain.render(g, blockchain.renderized_to, blockchain.renderized_to+10, false);
+		blockchain.removeFirst(2);
 
-		console.log(blockchain.renderized_from, blockchain.renderized_to);
+	} else if(x < lastTranslate-blockchain.dimensions) {
 
-	} else if(-1*transform.x < lastTranslate-blockchain.dimensions) {
+		lastTranslate = x-blockchain.dimensions;
 
-		console.log('renderizza livello verso sinistra');
-		lastTranslate = (-1*transform.x)-blockchain.dimensions;
+		if(blockchain.renderized_from > 0) {
+			blockchain.render(g, blockchain.renderized_from-10, blockchain.renderized_from, false);
+			blockchain.removeLast(2);
+		}
 
 	}
 
 	g.attr("transform", transform);
 }
 
-async function computeAndRender(length, height = 0, rendering_window = 100) {
+async function computeAndRender(length, height = 0) {
 	d3.select('#generate_icon').attr('class', 'text-danger nav-icon fas fa-circle-notch fa-spin');
 
-	await blockchain.compute(10, length);
+	await blockchain.compute(forkProbability, length);
 
-	/*if(height < rendering_window)
-		blockchain.render(g, 0, rendering_window);
+	console.log(blockchain.forks);
+
+	if(height < RENDERING_WINDOW)
+		blockchain.render(g, 0, RENDERING_WINDOW);
 	else
-		blockchain.render(g, height-rendering_window, height+rendering_window);*/
-
-	blockchain.render(g, 100, 200);
-	blockchain.render(g, 0, 100, false);
+		blockchain.render(g, height-RENDERING_WINDOW, height+RENDERING_WINDOW);
 
 	d3.select('#generate_icon').attr('class', 'text-danger nav-icon far fa-play-circle');
 }

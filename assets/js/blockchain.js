@@ -10,6 +10,7 @@ class Blockchain {
 		this.dimensions = 100;
 		this.offset = 0;
 		this.renderized_from = this.renderized_to = undefined;
+		this.clickedBlock = null;
 	}
 
 	clear() {
@@ -23,6 +24,13 @@ class Blockchain {
 
 	forks() {
 		return this.forks;
+	}
+	getClickedBlock(){
+		return this.clickedBlock;
+	}
+	
+	setClickedBlock(oBlock){
+		this.clickedBlock = oBlock;
 	}
 
 	compute(probability, blocksNumber, valueFactor = 20) {
@@ -87,7 +95,7 @@ class Blockchain {
 						block.next2 = id;
 						this['chain']['blocks'][id.toString()] = next2;
 						this.chain.heights[h+1].push(id.toString());
-						this.forks.push(h);
+						this.forks.push(h+1);
 						id += 1;
 					}
 
@@ -130,6 +138,105 @@ class Blockchain {
 
 		return this.chain;
 	}
+	selectedChain(e){
+
+		
+		var selector = e.target;
+		var idSelected = selector.getAttribute("id");
+		var colorSelected = selector.getAttribute("color");
+		var xblock = selector.getAttribute("cx");
+
+
+		var blockSelected = this.chain.blocks[idSelected];
+		
+		
+		var numValori= 3
+
+
+		var rect={
+			x: xblock - 100,
+			y: 400,
+			/*
+			width: 960- margin.left - margin.right,
+			height: 500 - margin.top - margin.bottom
+			*/
+			width: 100*(numValori*2+1),
+			height: 40*(numValori*2+1)
+			
+		};
+
+		var margin = {
+			top: rect.height/(numValori*2+1), 
+			bottom: rect.height/(numValori*2+1), 
+			right: rect.width*0.15, 
+			left: rect.width*0.1,
+		}
+		var fontSize = 50;
+
+		/*
+		
+		
+		*/
+
+
+		if(this.getClickedBlock()!== null){
+			//console.log('Cancellando: ', this.getClickedBlock()["id"]);
+			
+			
+			d3.select('#rect'+(this.getClickedBlock()["id"])).remove();
+
+			d3.select('#rectTxt1'+(this.getClickedBlock()["id"])).remove();
+			d3.select('#rectTxt2'+(this.getClickedBlock()["id"])).remove();
+			d3.select('#rectTxt3'+(this.getClickedBlock()["id"])).remove();
+			
+		}
+			this.setClickedBlock(blockSelected) ;
+	
+	
+			g.append('rect')
+				.attr('x', rect.x)
+				.attr('y', rect.y)
+				.attr('rx', 20)
+				.attr('ry', 20)
+				.attr('width', rect.width)
+				.attr('height', rect.height)
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+				.attr("id", 'rect'+blockSelected['id'])
+				.style('fill', colorSelected);
+
+
+				
+
+
+				g.append('text')
+					.attr('x', (+rect.x) + (+margin.left*2))
+					.attr('y', (+rect.y) + (+margin.top*3))
+					.attr('fill', 'white')
+					.attr("id", 'rectTxt1'+blockSelected['id'])
+					.style("font-size", fontSize)
+					.text("Nodo "+ blockSelected['id']);
+
+					//console.log('id: ', blockSelected['id']);
+
+				
+				g.append('text')
+					.attr('x', (+rect.x) + (+margin.left*2))
+					.attr('y', (+rect.y) + (+margin.top*5))
+					.attr('fill', 'white')
+					.attr("id", 'rectTxt2'+blockSelected['id'])
+					.style("font-size", fontSize)
+					.text("Timestamp: " + Math.floor(Math.random() * 10^7));
+
+				g.append('text')
+					.attr('x', (+rect.x) + (+margin.left*2))
+					.attr('y', (+rect.y) + (+margin.top*7))
+					.attr('fill', 'white')
+					.attr("id", 'rectTxt3'+blockSelected['id'])
+					.style("font-size", fontSize)
+					.text("Valore: "+ Math.floor(blockSelected["value"])+ "$");
+		
+	}
+
 
 	/***************************************************************************************************/
 
@@ -164,10 +271,13 @@ class Blockchain {
 							.attr('fill', 'transparent')
 
 					g.append('circle')
+						.attr("id",block['id'])
 						.attr('cx', (i-from)*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
+						.attr('color', '#68b2a1')
 						.style('fill', '#68b2a1')
+						.on('click', (event) => {this.selectedChain(event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
 
@@ -206,10 +316,13 @@ class Blockchain {
 							.attr('fill', 'transparent')
 
 					g.append('circle')
+						.attr("id",block['id'])
 						.attr('cx', (i-this.offset)*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
+						.attr('color', '#68b2a1')
 						.style('fill', '#68b2a1')
+						.on('click', (event) => {this.selectedChain(event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
 
@@ -229,6 +342,20 @@ class Blockchain {
 
 		}
 
+	}
+
+	removeFirst(toRemove) {
+		for(let i=this.renderized_from; i<this.renderized_from+toRemove; i++)
+			d3.select('#height-'+i).remove();
+
+		this.renderized_from += toRemove;
+	}
+
+	removeLast(toRemove) {
+		for(let i=this.renderized_to; i<this.renderized_to-toRemove; i--)
+			d3.select('#height-'+i).remove();
+
+		this.renderized_to -= toRemove;
 	}
 
 }
