@@ -2,8 +2,13 @@ const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 
 const svg = d3.select('svg');
-const g = svg.append('g');
+const g = d3.select('g');
 const RENDERING_WINDOW = 50;
+
+const viewBound = {
+	'up': document.getElementById('main-view').clientHeight/4,
+	'down': 3*document.getElementById('main-view').clientHeight/4
+}
 
 const blockchain = new Blockchain();
 
@@ -37,6 +42,11 @@ d3.select('#goto-height').on('change', (event) => {
 let lastTranslate = 0;
 function zoomed({transform}) {
 	let x = -1*transform.x;
+
+	if(transform.y < viewBound.up)
+		transform.y = viewBound.up;
+	else if(transform.y > viewBound.down)
+		transform.y = viewBound.down;
 
 	if(x > lastTranslate+blockchain.dimensions) {
 
