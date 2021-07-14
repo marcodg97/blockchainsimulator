@@ -126,12 +126,23 @@ class Blockchain {
 		for(let i=0; i<this.chain.heights.length; i++) {
 			for(let j=0; j<this.chain.heights[i].length; j++) {
 
+				let blockHeights = [];
 				let block = this['chain']['blocks'][this.chain.heights[i][j]];
 				
-				if(block.next1 !== null)
+				if(block.next1 !== null) {
 					this['chain']['blocks'][block.next1]['render_height'] = block.render_height;
-				if(block.next2 !== null)
+				} if(block.next2 !== null) {
 					this['chain']['blocks'][block.next2]['render_height'] = (this.chain.heights[i].length % 2 ? 1:-1)*this.dimensions;
+
+					blockHeights.push(this['chain']['blocks'][block.next2]['render_height'])
+
+					//while(blockHeights.includes(this['chain']['blocks'][block.next2]['render_height']))
+					//	this['chain']['blocks'][block.next2]['render_height'] += this['chain']['blocks'][block.next2]['render_height'] >= 0 ? this.dimensions: -1*this.dimensions;
+
+					
+				}
+
+				console.log(blockHeights)
 
 			}
 		}

@@ -43,8 +43,8 @@ let lastTranslate = 0;
 function zoomed({transform}) {
 	let x = -1*transform.x;
 
-	if(transform.y < viewBound.up)
-		transform.y = viewBound.up;
+	if(transform.y < 0)
+		transform.y = 0;
 	else if(transform.y > viewBound.down)
 		transform.y = viewBound.down;
 
