@@ -66,15 +66,23 @@
 				<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 					<!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
 					<li class="nav-item">
-						<div class="nav-link">
-							<i class="fas fa-level-up-alt"></i>
-							<p>Go to height</p>
-							<div class="slidecontainer">
-								<input id='goto-height' class="form-control form-control-sm" type="number" id='block-numbers' min='0'>
-							</div>
-						</div>
+						<a href="#" class="nav-link active">
+							<i class="nav-icon fas fa-eye"></i>
+							<p>View<i class="right fas fa-angle-left"></i></p>
+						</a>
+						<ul class="nav nav-treeview">
+							<li class="nav-item">
+								<div class="nav-link">
+									<i class="fas fa-level-up-alt"></i>
+									<p>Go to height</p>
+									<div class="slidecontainer">
+										<input id='goto-height' class="form-control form-control-sm" type="number" id='block-numbers' min='0'>
+									</div>
+								</div>
+							</li>
+						</ul>
 					</li>
-					<li class="nav-item menu-open">
+					<li class="nav-item">
 						<a href="#" class="nav-link active">
 							<i class="nav-icon fas fa-cubes"></i>
 							<p>Generator<i class="right fas fa-angle-left"></i></p>
@@ -128,17 +136,27 @@
 		<!-- Content Header (Page header) -->
 		<div class="content-header">
 			<div class="container-fluid">
-				<div class="row mb-2">
+				<div class='row thumbnail-view'>
 					<div class="col-sm-12">
 						<img style="width: 100%" src="thumbnail.svg">
 					</div>
 				</div>
+				<div class='row'>
+					<div class='col-sm-12'>
+						<svg class='blockchain-view' id='main-view'>
+							<g></g>
+						</svg>
+					</div>
+				</div>
+				<div class='row'>
+					<div class="col-sm-4">
+						<svg id='graph-view' class='graph-view'></svg>
+					</div>
+					<div class='col-sm-4'></div>
+					<div class='col-sm-4'></div>
+				</div>
 			</div>
 		</div>
-
-		<svg id='main-view'>
-			<g></g>
-		</svg>
 	</div>
 	<!-- /.content-wrapper -->
 
@@ -156,6 +174,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
 
+<script src="assets/js/graph.js"></script>
 <script src="assets/js/blockchain.js"></script>
 <script src="assets/js/main.js"></script>
 

@@ -7,17 +7,19 @@ const RENDERING_WINDOW = 50;
 
 const viewBound = {
 	'up': document.getElementById('main-view').clientHeight/4,
-	'down': 3*document.getElementById('main-view').clientHeight/4
+	'down': document.getElementById('main-view').clientHeight
 }
 
 const blockchain = new Blockchain();
+
+const graph = new Graph();
 
 /*********************************************************************************************************/
 
 var forkProbability = 50000;
 var blockNumber = 100;
 
-svg.call(d3.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.1, 5]).on("zoom", zoomed));
+svg.call(d3.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.5, 1.5]).on("zoom", zoomed));
 
 d3.select('#fork-prob-range').on('change', (event) => {
 	d3.select('#fork-prob-text').html('Fork probability (1 of '+event.srcElement.value+')');
@@ -36,6 +38,30 @@ d3.select('#goto-height').on('change', (event) => {
 	else
 		blockchain.render(g, parseInt(event.srcElement.value,10)-RENDERING_WINDOW, parseInt(event.srcElement.value,10)+RENDERING_WINDOW);
 });
+
+graph.values = [
+	{x: 0, y: 0},
+	{x: 1, y: 1},
+	{x: 2, y: 2},
+	{x: 3, y: 3},
+	{x: 4, y: 4},
+	{x: 5, y: 5},
+	{x: 6, y: 6},
+	{x: 7, y: 7},
+	{x: 8, y: 8},
+];
+
+graph.x = function(d) {
+	return d.x;
+}
+
+graph.y = function(d) {
+	return d.y;
+}
+
+graph.color = 'orange';
+
+graph.render('graph-view', [0,9], [0,9]);
 
 /*********************************************************************************************************/
 

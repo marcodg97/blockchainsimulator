@@ -1,6 +1,21 @@
 svg {
 	width: 100%;
-	height: 90vh;
+	/*height: 70vh;*/
+}
+
+.thumbnail-view {
+	width: 100%;
+	height: calc(10vh - 19px);
+}
+
+.blockchain-view {
+	width: 100%;
+	height: calc(40vh - 19px);
+}
+
+.graph-view {
+	width: 100%;
+	height: calc(50vh - 19px);
 }
 
 .slidecontainer {
