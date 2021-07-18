@@ -141,9 +141,6 @@ class Blockchain {
 
 					
 				}
-
-				console.log(blockHeights)
-
 			}
 		}
 
@@ -194,11 +191,11 @@ class Blockchain {
 			//console.log('Cancellando: ', this.getClickedBlock()["id"]);
 			
 			
-			d3.select('#rect'+(this.getClickedBlock()["id"])).remove();
+			d3v7.select('#rect'+(this.getClickedBlock()["id"])).remove();
 
-			d3.select('#rectTxt1'+(this.getClickedBlock()["id"])).remove();
-			d3.select('#rectTxt2'+(this.getClickedBlock()["id"])).remove();
-			d3.select('#rectTxt3'+(this.getClickedBlock()["id"])).remove();
+			d3v7.select('#rectTxt1'+(this.getClickedBlock()["id"])).remove();
+			d3v7.select('#rectTxt2'+(this.getClickedBlock()["id"])).remove();
+			d3v7.select('#rectTxt3'+(this.getClickedBlock()["id"])).remove();
 			
 		}
 			this.setClickedBlock(blockSelected) ;
@@ -251,6 +248,153 @@ class Blockchain {
 
 	/***************************************************************************************************/
 
+	compactRender(svg, clearBefore = true) {
+		if(clearBefore)
+			svg.html('');
+
+		let compactChain = [];
+
+		let from = 0;
+		let collecting = false;
+
+		for(let i=1; i<this.chain.heights.length; i++) {
+			if(this.chain.heights[i].length == 1 && collecting && this.chain.heights[i+1] && this.chain.heights[i+1].length == 1) {
+				collecting = false;
+
+				compactChain.push({
+					from: from-1,
+					to: i-1
+				});
+
+			} else if(this.chain.heights[i].length > 1 && !collecting) {
+				from = i;
+				collecting = true;
+			}
+		}
+
+		if(collecting) {
+			compactChain.push({
+				from:from,
+				to: this.chain.heights.length
+			});
+		}
+
+		console.log(compactChain);
+
+		/*********************************************************************/
+
+		let shuttle = 0;
+
+		if(compactChain.length > 0) {
+			g.append('line')
+				.attr('x1', 0)
+				.attr('y1', 0)
+				.attr('x2', this.dimensions)
+				.attr('y2', 0)
+				.attr('style', 'stroke:#000');
+			g.append('circle')
+				.attr('cx', 0)
+				.attr('cy', 0)
+				.attr('r', this.dimensions/2)
+				.style('fill', '#68b2a1');
+			g.append('text')
+				.attr('x', 0)
+				.attr('y', 0)
+				.attr('text-anchor', 'middle')
+				.html('[0-'+(compactChain[0].from-1)+']');
+		} else {
+			g.append('circle')
+				.attr('cx', 0)
+				.attr('cy', 0)
+				.attr('r', this.dimensions/2)
+				.style('fill', '#68b2a1');
+			g.append('text')
+				.attr('x', 0)
+				.attr('y', 0)
+				.attr('text-anchor', 'middle')
+				.html('[0-'+(this.chain.heights.length)+']');
+		}
+
+		let height = 1;
+		for(let i=0; i<compactChain.length; i++) {
+
+			for(let j=compactChain[i].from; j<=compactChain[i].to; j++) {
+
+				for(let k=0; k<this.chain.heights[j].length; k++) {
+					let block = this['chain']['blocks'][this.chain.heights[j][k]];
+
+					if(block.next1 !== null)
+						g.append('line')
+							.attr('x1', height*this.dimensions)
+							.attr('y1', block.render_height)
+							.attr('x2', (height+1)*this.dimensions)
+							.attr('y2', block.render_height)
+							.attr('style', 'stroke:#000')
+
+					if(block.next2 !== null)
+						g.append('path')
+							.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height+1)*this.dimensions)+','+block.render_height+' '+(height*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((height+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+							.attr('stroke','black')
+							.attr('fill', 'transparent')
+
+					g.append('circle')
+						.attr("id",block['id'])
+						.attr('cx', height*this.dimensions)
+						.attr('cy', block.render_height)
+						.attr('r', this.dimensions/5)
+						.attr('color', '#68b2a1')
+						.style('fill', '#68b2a1')
+						.on('click', (event) => {this.selectedChain(event);})
+						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+
+					g.append('text')
+						.attr('x', height*this.dimensions)
+						.attr('y', block.render_height)
+						.attr('text-anchor', 'middle')
+						.html(block.id)
+				}
+
+				height++;
+			}
+
+
+			if(i != compactChain.length-1) {
+				g.append('line')
+					.attr('x1', height*this.dimensions)
+					.attr('y1', 0)
+					.attr('x2', (height+1)*this.dimensions)
+					.attr('y2', 0)
+					.attr('style', 'stroke:#000');
+				g.append('circle')
+					.attr('cx', height*this.dimensions)
+					.attr('cy', 0)
+					.attr('r', this.dimensions/2)
+					.style('fill', '#68b2a1');
+				g.append('text')
+					.attr('x', height*this.dimensions)
+					.attr('y', 0)
+					.attr('text-anchor', 'middle')
+					.html('['+(compactChain[i].to+1)+'-'+(compactChain[i+1].from-1)+']');
+			} else {
+				g.append('circle')
+					.attr('cx', height*this.dimensions)
+					.attr('cy', 0)
+					.attr('r', this.dimensions/2)
+					.style('fill', '#68b2a1');
+				g.append('text')
+					.attr('x', height*this.dimensions)
+					.attr('y', 0)
+					.attr('text-anchor', 'middle')
+					.html('['+(compactChain[i].to+1)+'-'+(this.chain.heights.length)+']');
+			}
+
+			height ++;
+
+		}
+
+	}
+
 	render(svg, from = 0, to = 100, clearBefore = true) {
 		if(to > this.chain.heights.length)
 			to = this.chain.heights.length;
@@ -298,6 +442,7 @@ class Blockchain {
 					g.append('text')
 						.attr('x', (i-from)*this.dimensions)
 						.attr('y', block.render_height)
+						.attr('text-anchor', 'middle')
 						.html(block.id)
 
 				}
@@ -346,6 +491,7 @@ class Blockchain {
 					g.append('text')
 						.attr('x', (i-this.offset)*this.dimensions)
 						.attr('y', block.render_height)
+						.attr('text-anchor', 'middle')
 						.html(block.id)
 
 				}
@@ -357,14 +503,14 @@ class Blockchain {
 
 	removeFirst(toRemove) {
 		for(let i=this.renderized_from; i<this.renderized_from+toRemove; i++)
-			d3.select('#height-'+i).remove();
+			d3v7.select('#height-'+i).remove();
 
 		this.renderized_from += toRemove;
 	}
 
 	removeLast(toRemove) {
 		for(let i=this.renderized_to; i<this.renderized_to-toRemove; i--)
-			d3.select('#height-'+i).remove();
+			d3v7.select('#height-'+i).remove();
 
 		this.renderized_to -= toRemove;
 	}

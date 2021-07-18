@@ -1,9 +1,11 @@
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 
-const svg = d3.select('svg');
-const g = d3.select('g');
+const svg = d3v7.select('svg');
+const g = d3v7.select('g');
+
 const RENDERING_WINDOW = 50;
+const MAX_GRAPH_TICK = 100;
 
 const viewBound = {
 	'up': document.getElementById('main-view').clientHeight/4,
@@ -12,25 +14,25 @@ const viewBound = {
 
 const blockchain = new Blockchain();
 
-const graph = new Graph();
+console.log(d3v7.version);
 
-/*********************************************************************************************************/
+/************************************************************************************************************************************************/
 
 var forkProbability = 50000;
 var blockNumber = 100;
 
-svg.call(d3.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.5, 1.5]).on("zoom", zoomed));
+svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.05, 1.5]).on("zoom", zoomed));
 
-d3.select('#fork-prob-range').on('change', (event) => {
-	d3.select('#fork-prob-text').html('Fork probability (1 of '+event.srcElement.value+')');
+d3v7.select('#fork-prob-range').on('change', (event) => {
+	d3v7.select('#fork-prob-text').html('Fork probability (1 of '+event.srcElement.value+')');
 	forkProbability = event.srcElement.value;
 });
 
-d3.select('#block-numbers').on('change', (event) => {
+d3v7.select('#block-numbers').on('change', (event) => {
 	blockNumber = event.srcElement.value;
 });
 
-d3.select('#goto-height').on('change', (event) => {
+d3v7.select('#goto-height').on('change', (event) => {
 	console.log('a')
 
 	if(event.srcElement.value < RENDERING_WINDOW)
@@ -39,31 +41,12 @@ d3.select('#goto-height').on('change', (event) => {
 		blockchain.render(g, parseInt(event.srcElement.value,10)-RENDERING_WINDOW, parseInt(event.srcElement.value,10)+RENDERING_WINDOW);
 });
 
-graph.values = [
-	{x: 0, y: 0},
-	{x: 1, y: 1},
-	{x: 2, y: 2},
-	{x: 3, y: 3},
-	{x: 4, y: 4},
-	{x: 5, y: 5},
-	{x: 6, y: 6},
-	{x: 7, y: 7},
-	{x: 8, y: 8},
-];
+/************************************************************************************************************************************************/
 
-graph.x = function(d) {
-	return d.x;
-}
+const difficultyGraph = new Graph('#difficulty-graph', 'line', {Difficulty: '#000'});
+const forksGraph = new Graph('#forks-graph');
 
-graph.y = function(d) {
-	return d.y;
-}
-
-graph.color = 'orange';
-
-graph.render('graph-view', [0,9], [0,9]);
-
-/*********************************************************************************************************/
+/************************************************************************************************************************************************/
 
 let lastTranslate = 0;
 function zoomed({transform}) {
@@ -96,19 +79,60 @@ function zoomed({transform}) {
 }
 
 async function computeAndRender() {
-	d3.select('#generate_icon').attr('class', 'text-danger nav-icon fas fa-circle-notch fa-spin');
-	let height = blockNumber/2;
+	d3v7.select('#generate_icon').attr('class', 'text-danger nav-icon fas fa-circle-notch fa-spin');
+	let height = (blockNumber/2) | 0;
 
 	await blockchain.compute(forkProbability, blockNumber);
 
 	console.log(blockchain.forks);
 
-	if(height < RENDERING_WINDOW)
+	//Graphs draw
+	let difficultyValues = [];
+	let forkValues = [{
+		x: 0,
+		y: 1
+	}];
+
+	let tick = blockchain.chain.heights.length > MAX_GRAPH_TICK ? ((blockchain.chain.heights.length/MAX_GRAPH_TICK) | 0) : 1;
+
+	for(let i=0; i<blockchain.chain.heights.length; i+=tick) {
+		difficultyValues.push({
+			x: i,
+			y: blockchain['chain']['blocks'][blockchain.chain.heights[i][0]]['value']
+		});
+	}
+
+	for(let i=1; i<blockchain.chain.heights.length-1; i++) {
+		if(blockchain.chain.heights[i].length != blockchain.chain.heights[i-1].length) {
+
+			forkValues.push({
+				x: i-1,
+				y: blockchain.chain.heights[i-1].length
+			});
+
+			forkValues.push({
+				x: i,
+				y: blockchain.chain.heights[i].length
+			});
+		}
+	}
+
+	forkValues.push({
+		x: blockchain.chain.heights.length,
+		y: blockchain.chain.heights[blockchain.chain.heights.length-1].length
+	});
+
+	difficultyGraph.addLine('Difficulty', difficultyValues);
+	forksGraph.addLine('Concurrent chains', forkValues);
+
+	//Blockchain draw
+	/*if(height < RENDERING_WINDOW)
 		blockchain.render(g, 0, RENDERING_WINDOW);
 	else
-		blockchain.render(g, height-RENDERING_WINDOW, height+RENDERING_WINDOW);
+		blockchain.render(g, height-RENDERING_WINDOW, height+RENDERING_WINDOW);*/
 
-	d3.select('#goto-height').attr('placeholder', height)
+	blockchain.compactRender(g);
 
-	d3.select('#generate_icon').attr('class', 'text-danger nav-icon far fa-play-circle');
+	d3v7.select('#goto-height').attr('placeholder', height)
+	d3v7.select('#generate_icon').attr('class', 'text-danger nav-icon far fa-play-circle');
 }
