@@ -1,6 +1,6 @@
 class Blockchain {
 
-	constructor() {
+	constructor(width) {
 		this.chain = {
 			'heights':[],
 			'blocks':{}
@@ -11,6 +11,7 @@ class Blockchain {
 		this.offset = 0;
 		this.renderized_from = this.renderized_to = undefined;
 		this.clickedBlock = null;
+		this.width = width;
 	}
 
 	clear() {
@@ -124,23 +125,28 @@ class Blockchain {
 		}
 
 		for(let i=0; i<this.chain.heights.length; i++) {
-			for(let j=0; j<this.chain.heights[i].length; j++) {
 
-				let blockHeights = [];
+			let blockHeights = [];
+			for(let j=0; j<this.chain.heights[i].length; j++) {
 				let block = this['chain']['blocks'][this.chain.heights[i][j]];
 				
 				if(block.next1 !== null) {
+
 					this['chain']['blocks'][block.next1]['render_height'] = block.render_height;
+					let multiplier = this['chain']['blocks'][block.next1]['render_height'] > 0 ? 1:-1;
+
+					while(blockHeights.includes(this['chain']['blocks'][block.next1]['render_height'])) {
+						this['chain']['blocks'][block.next1]['render_height'] += multiplier*this.dimensions;
+					}
+
+					blockHeights.push(this['chain']['blocks'][block.next1]['render_height'])
 				} if(block.next2 !== null) {
-					this['chain']['blocks'][block.next2]['render_height'] = (this.chain.heights[i].length % 2 ? 1:-1)*this.dimensions;
+					let multiplier = this.chain.heights[i].length % 2 ? 1:-1;
 
+					this['chain']['blocks'][block.next2]['render_height'] = multiplier*this.dimensions;	
 					blockHeights.push(this['chain']['blocks'][block.next2]['render_height'])
-
-					//while(blockHeights.includes(this['chain']['blocks'][block.next2]['render_height']))
-					//	this['chain']['blocks'][block.next2]['render_height'] += this['chain']['blocks'][block.next2]['render_height'] >= 0 ? this.dimensions: -1*this.dimensions;
-
-					
 				}
+
 			}
 		}
 
@@ -248,7 +254,8 @@ class Blockchain {
 
 	/***************************************************************************************************/
 
-	compactRender(svg, clearBefore = true) {
+	compactRender(svg, clearBefore = true, height = 0) {
+		this.compact = true;
 		if(clearBefore)
 			svg.html('');
 
@@ -285,51 +292,78 @@ class Blockchain {
 
 		let shuttle = 0;
 
+		let g = svg.append('g').attr('id',height);
+
 		if(compactChain.length > 0) {
+			console.log(compactChain[0].from-1);
+
 			g.append('line')
-				.attr('x1', 0)
-				.attr('y1', 0)
-				.attr('x2', this.dimensions)
-				.attr('y2', 0)
+				.attr('x1', height*this.dimensions)
+				.attr('y1', height*this.dimensions)
+				.attr('x2', (height+1)*this.dimensions)
+				.attr('y2', height*this.dimensions)
 				.attr('style', 'stroke:#000');
 			g.append('circle')
-				.attr('cx', 0)
-				.attr('cy', 0)
+				.attr('cx', height*this.dimensions)
+				.attr('cy', height*this.dimensions)
 				.attr('r', this.dimensions/2)
 				.style('fill', '#68b2a1');
 			g.append('text')
-				.attr('x', 0)
-				.attr('y', 0)
+				.attr('x', height*this.dimensions)
+				.attr('y', height*this.dimensions)
 				.attr('text-anchor', 'middle')
-				.html('[0-'+(compactChain[0].from-1)+']');
+				.html('[#0-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']');
 		} else {
 			g.append('circle')
-				.attr('cx', 0)
-				.attr('cy', 0)
+				.attr('cx', height*this.dimensions)
+				.attr('cy', height*this.dimensions)
 				.attr('r', this.dimensions/2)
 				.style('fill', '#68b2a1');
 			g.append('text')
-				.attr('x', 0)
-				.attr('y', 0)
+				.attr('x', height*this.dimensions)
+				.attr('y', height*this.dimensions)
 				.attr('text-anchor', 'middle')
-				.html('[0-'+(this.chain.heights.length)+']');
+				.html('[#0-#'+(this.chain.heights.length)+']');
 		}
 
-		let height = 1;
+		height++;
 		for(let i=0; i<compactChain.length; i++) {
 
 			for(let j=compactChain[i].from; j<=compactChain[i].to; j++) {
 
+				g = svg.append('g').attr('id',height)
+				// J -> blockchain height
+
+				g.append('line')
+					.attr('x1', (height*this.dimensions))
+					.attr('y1', -3*this.width)
+					.attr('x2', (height*this.dimensions))
+					.attr('y2', 3*this.width)
+					.attr('style', 'stroke:#aaa; stroke-dasharray:5,5')
+				g.append('text')
+					.attr('x', (height*this.dimensions)+10)
+					.attr('y', (-width/10))
+					.html(j)
+					.style('fill', '#aaa')
+
 				for(let k=0; k<this.chain.heights[j].length; k++) {
 					let block = this['chain']['blocks'][this.chain.heights[j][k]];
 
-					if(block.next1 !== null)
-						g.append('line')
-							.attr('x1', height*this.dimensions)
-							.attr('y1', block.render_height)
-							.attr('x2', (height+1)*this.dimensions)
-							.attr('y2', block.render_height)
-							.attr('style', 'stroke:#000')
+					if(block.next1 !== null) {
+						if(this['chain']['blocks'][block['next1']]['render_height'] == block.render_height) {
+							g.append('line')
+								.attr('x1', height*this.dimensions)
+								.attr('y1', block.render_height)
+								.attr('x2', (height+1)*this.dimensions)
+								.attr('y2', block.render_height)
+								.attr('style', 'stroke:#000');
+						} else { 
+							g.append('path')
+								.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height+1)*this.dimensions)+','+block.render_height+' '+(height*this.dimensions)+','+this['chain']['blocks'][block['next1']]['render_height']+' '+((height+1)*this.dimensions)+','+this['chain']['blocks'][block['next1']]['render_height'])
+								.attr('stroke','black')
+								.attr('fill', 'transparent');
+						}
+					}
 
 					if(block.next2 !== null)
 						g.append('path')
@@ -352,12 +386,11 @@ class Blockchain {
 						.attr('x', height*this.dimensions)
 						.attr('y', block.render_height)
 						.attr('text-anchor', 'middle')
-						.html(block.id)
+						.html('#'+block.id)
 				}
 
 				height++;
 			}
-
 
 			if(i != compactChain.length-1) {
 				g.append('line')
@@ -366,16 +399,35 @@ class Blockchain {
 					.attr('x2', (height+1)*this.dimensions)
 					.attr('y2', 0)
 					.attr('style', 'stroke:#000');
-				g.append('circle')
-					.attr('cx', height*this.dimensions)
-					.attr('cy', 0)
-					.attr('r', this.dimensions/2)
-					.style('fill', '#68b2a1');
-				g.append('text')
-					.attr('x', height*this.dimensions)
-					.attr('y', 0)
-					.attr('text-anchor', 'middle')
-					.html('['+(compactChain[i].to+1)+'-'+(compactChain[i+1].from-1)+']');
+
+				if(compactChain[i].to-compactChain.from === 1) {
+					g.append('circle')
+						.attr('cx', height*this.dimensions)
+						.attr('cy', 0)
+						.attr('r', this.dimensions/5)
+						.attr('color', '#68b2a1')
+						.style('fill', '#68b2a1')
+						.on('click', (event) => {this.selectedChain(event);})
+						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+
+					g.append('text')
+						.attr('x', height*this.dimensions)
+						.attr('y', 0)
+						.attr('text-anchor', 'middle')
+						.html('#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id))
+				} else {
+					g.append('circle')
+						.attr('cx', height*this.dimensions)
+						.attr('cy', 0)
+						.attr('r', this.dimensions/2)
+						.style('fill', '#68b2a1');
+					g.append('text')
+						.attr('x', height*this.dimensions)
+						.attr('y', 0)
+						.attr('text-anchor', 'middle')
+						.html('[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id)+']');
+				}
 			} else {
 				g.append('circle')
 					.attr('cx', height*this.dimensions)
@@ -386,7 +438,7 @@ class Blockchain {
 					.attr('x', height*this.dimensions)
 					.attr('y', 0)
 					.attr('text-anchor', 'middle')
-					.html('['+(compactChain[i].to+1)+'-'+(this.chain.heights.length)+']');
+					.html('[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[this.chain.heights.length-1][0]].id)+']');
 			}
 
 			height ++;
@@ -396,6 +448,8 @@ class Blockchain {
 	}
 
 	render(svg, from = 0, to = 100, clearBefore = true) {
+		this.compact = false;
+
 		if(to > this.chain.heights.length)
 			to = this.chain.heights.length;
 

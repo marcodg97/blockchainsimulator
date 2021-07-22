@@ -107,9 +107,12 @@
 							<li class='nav-item'>
 								<div class='nav-link'>
 									<i class='fas fa-project-diagram'></i>
-									<p id='fork-prob-text'>Fork probability (1 of 50000)</p>
-									<div class='slidecontainer'>
-										<input type='range' min='5' max='100000' value='50000' class='slider' id='fork-prob-range'>
+									<p>Fork probability</p>
+									<div class='input-group input-group-sm mb-3'>
+										<div class="input-group-prepend">
+											<span class='input-group-text'>1 of</span>
+										</div>
+										<input class='form-control form-control-sm' type='number' min='5' max='100000' value='50000' class='slider' id='fork-prob-range'>
 									</div>
 								</div>
 							</li>
@@ -143,11 +146,6 @@
 		<!-- Content Header (Page header) -->
 		<div class='content-header'>
 			<div class='container-fluid'>
-				<div class='row thumbnail-view'>
-					<div class='col-sm-12'>
-						<img style='width: 100%' src='thumbnail.svg'>
-					</div>
-				</div>
 				<div class='row'>
 					<div class='col-sm-12'>
 						<svg class='blockchain-view' id='main-view'>

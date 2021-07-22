@@ -4,7 +4,7 @@ const height = document.body.clientHeight;
 const svg = d3v7.select('svg');
 const g = d3v7.select('g');
 
-const RENDERING_WINDOW = 50;
+const RENDERING_WINDOW = 100;
 const MAX_GRAPH_TICK = 100;
 
 const viewBound = {
@@ -12,7 +12,7 @@ const viewBound = {
 	'down': document.getElementById('main-view').clientHeight
 }
 
-const blockchain = new Blockchain();
+const blockchain = new Blockchain(width);
 
 console.log(d3v7.version);
 
@@ -21,16 +21,10 @@ console.log(d3v7.version);
 var forkProbability = 50000;
 var blockNumber = 100;
 
-svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.05, 1.5]).on("zoom", zoomed));
+svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.5, 1.5]).on("zoom", zoomed));
 
-d3v7.select('#fork-prob-range').on('change', (event) => {
-	d3v7.select('#fork-prob-text').html('Fork probability (1 of '+event.srcElement.value+')');
-	forkProbability = event.srcElement.value;
-});
-
-d3v7.select('#block-numbers').on('change', (event) => {
-	blockNumber = event.srcElement.value;
-});
+d3v7.select('#fork-prob-range').on('change', (event) => {forkProbability = event.srcElement.value;});
+d3v7.select('#block-numbers').on('change', (event) => {blockNumber = event.srcElement.value;});
 
 d3v7.select('#goto-height').on('change', (event) => {
 	console.log('a')
@@ -75,7 +69,7 @@ function zoomed({transform}) {
 
 	}
 
-	g.attr("transform", transform);
+	g.attr('transform', transform);
 }
 
 async function computeAndRender() {
@@ -83,8 +77,6 @@ async function computeAndRender() {
 	let height = (blockNumber/2) | 0;
 
 	await blockchain.compute(forkProbability, blockNumber);
-
-	console.log(blockchain.forks);
 
 	//Graphs draw
 	let difficultyValues = [];
