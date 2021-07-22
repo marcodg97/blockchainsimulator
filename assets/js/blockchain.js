@@ -1,13 +1,13 @@
 class Blockchain {
 
-	constructor(width) {
+	constructor(width, dimensions = 120) {
 		this.chain = {
 			'heights':[],
 			'blocks':{}
 		};
 
 		this.forks = [];
-		this.dimensions = 100;
+		this.dimensions = dimensions;
 		this.offset = 0;
 		this.renderized_from = this.renderized_to = undefined;
 		this.clickedBlock = null;
@@ -34,7 +34,7 @@ class Blockchain {
 		this.clickedBlock = oBlock;
 	}
 
-	compute(probability, blocksNumber, valueFactor = 20) {
+	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
 		let h = 0;
 		let value = blocksNumber*valueFactor;
 		var id = 1;
@@ -342,7 +342,7 @@ class Blockchain {
 					.attr('style', 'stroke:#aaa; stroke-dasharray:5,5')
 				g.append('text')
 					.attr('x', (height*this.dimensions)+10)
-					.attr('y', (-width/10))
+					.attr('y', (-width/8))
 					.html(j)
 					.style('fill', '#aaa')
 

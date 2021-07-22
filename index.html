@@ -120,13 +120,16 @@
 								<div class='nav-link'>
 									<i class='fas fa-ellipsis-v'></i>
 									<p>Fork fertility</p>
-									<div class='slidecontainer'>
-										<input type='range' min='5' max='100000' value='50000' class='slider' id='fork-fert-range'>
+									<div class='input-group input-group-sm mb-3'>
+										<div class='input-group-prepend'>
+											<span class='input-group-text'>1 of</span>
+										</div>
+										<input class='form-control form-control-sm' type='number' min='5' max='100000' value='500' class='slider' id='fork-fertility'>
 									</div>
 								</div>
 							</li>
 							<li class='nav-item'>
-								<a href='#' class='nav-link' onclick='computeAndRender(600000, 200);'>
+								<a href='#' class='nav-link' onclick='computeAndRender();'>
 									<i id='generate_icon' class='text-danger nav-icon far fa-play-circle'></i>
 									<p>Make new blockchain</p>
 								</a>

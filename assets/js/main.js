@@ -19,16 +19,16 @@ console.log(d3v7.version);
 /************************************************************************************************************************************************/
 
 var forkProbability = 50000;
+var forkFertility = 50000;
 var blockNumber = 100;
 
-svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.5, 1.5]).on("zoom", zoomed));
+svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.25, 1.5]).on('zoom', zoomed));
 
 d3v7.select('#fork-prob-range').on('change', (event) => {forkProbability = event.srcElement.value;});
+d3v7.select('#fork-fertility').on('change', (event) => {forkFertility = event.srcElement.value;});
 d3v7.select('#block-numbers').on('change', (event) => {blockNumber = event.srcElement.value;});
 
 d3v7.select('#goto-height').on('change', (event) => {
-	console.log('a')
-
 	if(event.srcElement.value < RENDERING_WINDOW)
 		blockchain.render(g, 0, RENDERING_WINDOW);
 	else
@@ -76,7 +76,7 @@ async function computeAndRender() {
 	d3v7.select('#generate_icon').attr('class', 'text-danger nav-icon fas fa-circle-notch fa-spin');
 	let height = (blockNumber/2) | 0;
 
-	await blockchain.compute(forkProbability, blockNumber);
+	await blockchain.compute(forkProbability, forkFertility, blockNumber);
 
 	//Graphs draw
 	let difficultyValues = [];
@@ -116,12 +116,6 @@ async function computeAndRender() {
 
 	difficultyGraph.addLine('Difficulty', difficultyValues);
 	forksGraph.addLine('Concurrent chains', forkValues);
-
-	//Blockchain draw
-	/*if(height < RENDERING_WINDOW)
-		blockchain.render(g, 0, RENDERING_WINDOW);
-	else
-		blockchain.render(g, height-RENDERING_WINDOW, height+RENDERING_WINDOW);*/
 
 	blockchain.compactRender(g);
 
