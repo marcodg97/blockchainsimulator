@@ -101,7 +101,7 @@ class Blockchain {
 					}
 
 				} else {
-					if (Math.floor(Math.random() * probability) === 0 && blocksNumber > id) {
+					if (Math.floor(Math.random() * forkFertility) === 0 && blocksNumber > id) {
 						next1 = {
 							'id': id,
 							'height': h+1,
@@ -115,6 +115,22 @@ class Blockchain {
 						this['chain']['blocks'][id.toString()] = next1;
 						this.chain.heights[h+1].push(id.toString());
 						id += 1;
+
+						/*if (Math.floor(Math.random() * forkFertility) === 0 && blocksNumber > id) {
+							next2 = {
+								'id': id,
+								'height': h+1,
+								'pred': block.id,
+								'next1': null,
+								'next2': null,
+								'value': value
+							}
+
+							block.next2 = id;
+							this['chain']['blocks'][id.toString()] = next2;
+							this.chain.heights[h+1].push(id.toString());
+							id += 1;
+						}*/
 					}
 				}
 
@@ -124,26 +140,36 @@ class Blockchain {
 
 		}
 
+		console.log(this.chain)
+
 		for(let i=0; i<this.chain.heights.length; i++) {
 
 			let blockHeights = [];
 			for(let j=0; j<this.chain.heights[i].length; j++) {
 				let block = this['chain']['blocks'][this.chain.heights[i][j]];
+
 				
 				if(block.next1 !== null) {
 
 					this['chain']['blocks'][block.next1]['render_height'] = block.render_height;
-					let multiplier = this['chain']['blocks'][block.next1]['render_height'] > 0 ? 1:-1;
+					let multiplier = block.render_height > 0 ? 1:-1;
 
 					while(blockHeights.includes(this['chain']['blocks'][block.next1]['render_height'])) {
 						this['chain']['blocks'][block.next1]['render_height'] += multiplier*this.dimensions;
 					}
 
 					blockHeights.push(this['chain']['blocks'][block.next1]['render_height'])
-				} if(block.next2 !== null) {
-					let multiplier = this.chain.heights[i].length % 2 ? 1:-1;
+				}
 
+				if(block.next2 !== null) {
+
+					let multiplier = block.render_height === 0 ? (this.chain.heights[i].length % 2 ? -1:1) : (block.render_height > 0 ? 1:-1);
 					this['chain']['blocks'][block.next2]['render_height'] = multiplier*this.dimensions;	
+
+					while(blockHeights.includes(this['chain']['blocks'][block.next2]['render_height'])) {
+						this['chain']['blocks'][block.next2]['render_height'] += multiplier*this.dimensions;
+					}
+
 					blockHeights.push(this['chain']['blocks'][block.next2]['render_height'])
 				}
 
@@ -342,7 +368,7 @@ class Blockchain {
 					.attr('style', 'stroke:#aaa; stroke-dasharray:5,5')
 				g.append('text')
 					.attr('x', (height*this.dimensions)+10)
-					.attr('y', (-width/8))
+					.attr('y', -1.5*this.dimensions)
 					.html(j)
 					.style('fill', '#aaa')
 
