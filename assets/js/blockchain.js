@@ -116,7 +116,7 @@ class Blockchain {
 						this.chain.heights[h+1].push(id.toString());
 						id += 1;
 
-						/*if (Math.floor(Math.random() * forkFertility) === 0 && blocksNumber > id) {
+						if (Math.floor(Math.random() * forkFertility) === 0 && blocksNumber > id) {
 							next2 = {
 								'id': id,
 								'height': h+1,
@@ -130,7 +130,7 @@ class Blockchain {
 							this['chain']['blocks'][id.toString()] = next2;
 							this.chain.heights[h+1].push(id.toString());
 							id += 1;
-						}*/
+						}
 					}
 				}
 
@@ -164,7 +164,7 @@ class Blockchain {
 				if(block.next2 !== null) {
 
 					let multiplier = block.render_height === 0 ? (this.chain.heights[i].length % 2 ? -1:1) : (block.render_height > 0 ? 1:-1);
-					this['chain']['blocks'][block.next2]['render_height'] = multiplier*this.dimensions;	
+					this['chain']['blocks'][block.next2]['render_height'] = block.render_height + (multiplier*this.dimensions);	
 
 					while(blockHeights.includes(this['chain']['blocks'][block.next2]['render_height'])) {
 						this['chain']['blocks'][block.next2]['render_height'] += multiplier*this.dimensions;
@@ -321,8 +321,6 @@ class Blockchain {
 		let g = svg.append('g').attr('id',height);
 
 		if(compactChain.length > 0) {
-			console.log(compactChain[0].from-1);
-
 			g.append('line')
 				.attr('x1', height*this.dimensions)
 				.attr('y1', height*this.dimensions)
@@ -338,7 +336,7 @@ class Blockchain {
 				.attr('x', height*this.dimensions)
 				.attr('y', height*this.dimensions)
 				.attr('text-anchor', 'middle')
-				.html('[#0-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']');
+				.html('[#1-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']');
 		} else {
 			g.append('circle')
 				.attr('cx', height*this.dimensions)
@@ -349,7 +347,7 @@ class Blockchain {
 				.attr('x', height*this.dimensions)
 				.attr('y', height*this.dimensions)
 				.attr('text-anchor', 'middle')
-				.html('[#0-#'+(this.chain.heights.length)+']');
+				.html('[#1-#'+(this.chain.heights.length)+']');
 		}
 
 		height++;
@@ -360,6 +358,8 @@ class Blockchain {
 				g = svg.append('g').attr('id',height)
 				// J -> blockchain height
 
+				let distance_factor = (this.chain.heights[j+1] == undefined || this.chain.heights[j+1].length < 9 ? 1:(this.chain.heights[j+1].length/8));
+
 				g.append('line')
 					.attr('x1', (height*this.dimensions))
 					.attr('y1', -3*this.width)
@@ -369,7 +369,7 @@ class Blockchain {
 				g.append('text')
 					.attr('x', (height*this.dimensions)+10)
 					.attr('y', -1.5*this.dimensions)
-					.html(j)
+					.html(j+1)
 					.style('fill', '#aaa')
 
 				for(let k=0; k<this.chain.heights[j].length; k++) {
@@ -380,22 +380,30 @@ class Blockchain {
 							g.append('line')
 								.attr('x1', height*this.dimensions)
 								.attr('y1', block.render_height)
-								.attr('x2', (height+1)*this.dimensions)
+								.attr('x2', (height+distance_factor)*this.dimensions)
 								.attr('y2', block.render_height)
 								.attr('style', 'stroke:#000');
 						} else { 
+
+							let bezier_bending_factor = block.render_height === 0 ? 1 : Math.abs((this['chain']['blocks'][block['next1']]['render_height']-block.render_height)/this.dimensions);
+							let cx = this.dimensions/bezier_bending_factor;
+
 							g.append('path')
-								.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height+1)*this.dimensions)+','+block.render_height+' '+(height*this.dimensions)+','+this['chain']['blocks'][block['next1']]['render_height']+' '+((height+1)*this.dimensions)+','+this['chain']['blocks'][block['next1']]['render_height'])
+								.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height*this.dimensions)+cx)+','+block.render_height+' '+(((height+distance_factor)*this.dimensions)-cx)+','+this['chain']['blocks'][block['next1']]['render_height']+' '+((height+distance_factor)*this.dimensions)+','+this['chain']['blocks'][block['next1']]['render_height'])
 								.attr('stroke','black')
 								.attr('fill', 'transparent');
 						}
 					}
 
-					if(block.next2 !== null)
+					if(block.next2 !== null) {
+						let bezier_bending_factor = block.render_height === 0 ? 1 : Math.abs((this['chain']['blocks'][block['next2']]['render_height']-block.render_height)/this.dimensions);
+						let cx = this.dimensions/bezier_bending_factor;
+
 						g.append('path')
-							.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height+1)*this.dimensions)+','+block.render_height+' '+(height*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((height+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+							.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height*this.dimensions)+cx)+','+block.render_height+' '+(((height+distance_factor)*this.dimensions)-cx)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((height+distance_factor)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
 							.attr('stroke','black')
 							.attr('fill', 'transparent')
+					}
 
 					g.append('circle')
 						.attr("id",block['id'])
@@ -415,7 +423,7 @@ class Blockchain {
 						.html('#'+block.id)
 				}
 
-				height++;
+				height += distance_factor;
 			}
 
 			if(i != compactChain.length-1) {
