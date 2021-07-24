@@ -59,35 +59,12 @@ class Graph {
 		let y = [name];
 
 		values.forEach((value) => {
-			x.push(value.x);
+			x.push(value.x+1);
 			y.push(value.y);
 		});
 
 		this.chart.load({
 			columns: [x,y]
-		});
-	}
-
-	addValues(difficulty, concurrentChains) {
-		let x = ['x']
-		let y = ['Difficulty']
-		let y2 = ['ConcurrentChains']
-
-		let y2Tick = 1;
-
-		difficulty.forEach((value) => {
-			x.push(value.x);
-			y.push(value.y);
-		});
-
-		concurrentChains.forEach((value) => {
-			y2.push(value.y);
-			if(value.y > y2Tick)
-				y2Tick = value.y;
-		});
-
-		this.chart.load({
-			columns: [x,y, y2]
 		});
 	}
 

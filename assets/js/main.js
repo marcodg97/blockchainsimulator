@@ -34,8 +34,7 @@ d3v7.select('#goto-height').on('change', (event) => {
 
 /************************************************************************************************************************************************/
 
-const difficultyGraph = new Graph('#difficulty-graph');
-const forksGraph = new Graph('#forks-graph');
+const graph = new Graph('#graph');
 
 /************************************************************************************************************************************************/
 
@@ -123,8 +122,8 @@ async function computeAndRender() {
 		y: blockchain.chain.heights[blockchain.chain.heights.length-1].length
 	});
 
-	difficultyGraph.addLine('Difficulty', difficultyValues);
-	difficultyGraph.addLine('Concurrent chains', forkValues);
+	graph.addLine('Difficulty', difficultyValues);
+	graph.addLine('Concurrent chains', forkValues);
 
 	blockchain.compactRender(g);
 	//blockchain.render(g);
