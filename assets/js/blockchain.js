@@ -55,7 +55,7 @@ class Blockchain {
 		id +=1;
 
 		let flag;
-		while(id<=blocksNumber) {
+		while(id <= blocksNumber) {
 			flag = false;
 			this.chain.heights.push([]);
 
@@ -116,7 +116,7 @@ class Blockchain {
 						this.chain.heights[h+1].push(id.toString());
 						id += 1;
 
-						if (Math.floor(Math.random() * forkFertility) === 0 && blocksNumber > id) {
+						if (Math.floor(Math.random() * forkFertility) === 0 && blocksNumber >= id) {
 							next2 = {
 								'id': id,
 								'height': h+1,
@@ -176,6 +176,7 @@ class Blockchain {
 
 		return this.chain;
 	}
+
 	selectedChain(e){
 
 		
@@ -314,7 +315,8 @@ class Blockchain {
 
 		/*********************************************************************/
 
-		let shuttle = 0;
+		let clusterFontSizeScale = d3.scaleLinear().domain([7,20]).range([26,10]);
+		let fontSizeScale = d3.scaleLinear().domain([2,9]).range([24,9]);
 
 		let g = svg.append('g').attr('id',height);
 
@@ -326,11 +328,6 @@ class Blockchain {
 				.attr('y2', height*this.dimensions)
 				.attr('style', 'stroke:#000');
 
-			if(compactChain[0].from === 0) {
-				console.log(compactChain);
-				return;
-			}
-
 			if(this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].next2 != null) {
 				let block = this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]]
 
@@ -340,31 +337,72 @@ class Blockchain {
 					.attr('fill', 'transparent')
 			}
 
-			g.append('circle')
-				.attr('cx', height*this.dimensions)
-				.attr('cy', height*this.dimensions)
-				.attr('r', this.dimensions/2)
-				.style('fill', '#17a2b8')
-				.style('stroke', '#0a444d');
-			g.append('text')
-				.attr('x', height*this.dimensions)
-				.attr('y', height*this.dimensions)
-				.attr('text-anchor', 'middle')
-				.attr('fill', 'white')
-				.html('[#1-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']');
+			if((compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id) === 1) {
+				g.append('circle')
+					.attr('cx', height*this.dimensions)
+					.attr('cy', height*this.dimensions)
+					.attr('r', this.dimensions/5)
+					.style('fill', '#17a2b8')
+					.style('stroke', '#0a444d');
+				g.append('text')
+					.attr('x', height*this.dimensions)
+					.attr('y', height*this.dimensions)
+					.attr('text-anchor', 'middle')
+					.attr('alignment-baseline', 'middle')
+					.attr('font-size', fontSizeScale(2))
+					.attr('fill', 'white')
+					.html('#1');
+			} else {
+				let blockText = '[#1-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']';
+				g.append('circle')
+					.attr('cx', height*this.dimensions)
+					.attr('cy', height*this.dimensions)
+					.attr('r', this.dimensions/2)
+					.style('fill', '#17a2b8')
+					.style('stroke', '#0a444d');
+				g.append('text')
+					.attr('x', height*this.dimensions)
+					.attr('y', height*this.dimensions)
+					.attr('text-anchor', 'middle')
+					.attr('alignment-baseline', 'middle')
+					.attr('font-size', clusterFontSizeScale(blockText.length))
+					.attr('fill', 'white')
+					.html(blockText);
+			}
+
 		} else {
-			g.append('circle')
-				.attr('cx', height*this.dimensions)
-				.attr('cy', height*this.dimensions)
-				.attr('r', this.dimensions/2)
-				.style('fill', '#17a2b8')
-				.style('stroke', '#0a444d');
-			g.append('text')
-				.attr('x', height*this.dimensions)
-				.attr('y', height*this.dimensions)
-				.attr('text-anchor', 'middle')
-				.attr('fill', 'white')
-				.html('[#1-#'+(this.chain.heights.length)+']');
+			if(this.chain.heights.length === 1) {
+				g.append('circle')
+					.attr('cx', height*this.dimensions)
+					.attr('cy', height*this.dimensions)
+					.attr('r', this.dimensions/5)
+					.style('fill', '#17a2b8')
+					.style('stroke', '#0a444d');
+				g.append('text')
+					.attr('x', height*this.dimensions)
+					.attr('y', height*this.dimensions)
+					.attr('text-anchor', 'middle')
+					.attr('alignment-baseline', 'middle')
+					.attr('font-size', fontSizeScale(2))
+					.attr('fill', 'white')
+					.html('#1');
+			} else {
+				let blockText = '[#1-#'+(this.chain.heights.length)+']';
+				g.append('circle')
+					.attr('cx', height*this.dimensions)
+					.attr('cy', height*this.dimensions)
+					.attr('r', this.dimensions/2)
+					.style('fill', '#17a2b8')
+					.style('stroke', '#0a444d');
+				g.append('text')
+					.attr('x', height*this.dimensions)
+					.attr('y', height*this.dimensions)
+					.attr('text-anchor', 'middle')
+					.attr('alignment-baseline', 'middle')
+					.attr('font-size', clusterFontSizeScale(blockText.length))
+					.attr('fill', 'white')
+					.html(blockText);
+			}
 		}
 
 		height++;
@@ -394,6 +432,7 @@ class Blockchain {
 
 				for(let k=0; k<this.chain.heights[j].length; k++) {
 					let block = this['chain']['blocks'][this.chain.heights[j][k]];
+					let blockText = '#'+block.id;
 
 					if(block.next1 !== null) {
 						if(this['chain']['blocks'][block['next1']]['render_height'] == block.render_height) {
@@ -440,8 +479,10 @@ class Blockchain {
 						.attr('x', height*this.dimensions)
 						.attr('y', block.render_height)
 						.attr('text-anchor', 'middle')
+						.attr('alignment-baseline', 'middle')
 						.attr('fill', 'white')
-						.html('#'+block.id)
+						.attr('font-size', fontSizeScale(blockText.length))
+						.html(blockText)
 				}
 
 				height += distance_factor;
@@ -465,6 +506,8 @@ class Blockchain {
 				}
 
 				if(compactChain[i].to-compactChain.from === 1) {
+					let blockText = '#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id);
+
 					g.append('circle')
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
@@ -479,9 +522,13 @@ class Blockchain {
 						.attr('x', height*this.dimensions)
 						.attr('y', 0)
 						.attr('text-anchor', 'middle')
+						.attr('alignment-baseline', 'middle')
+						.attr('font-size', fontSizeScale(blockText.length))
 						.attr('fill', 'white')
-						.html('#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id))
+						.html(blockText)
 				} else {
+					let blockText = '[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id)+']';
+
 					g.append('circle')
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
@@ -492,10 +539,14 @@ class Blockchain {
 						.attr('x', height*this.dimensions)
 						.attr('y', 0)
 						.attr('text-anchor', 'middle')
+						.attr('alignment-baseline', 'middle')
+						.attr('font-size', clusterFontSizeScale(blockText.length))
 						.attr('fill', 'white')
-						.html('[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id)+']');
+						.html(blockText);
 				}
 			} else {
+				let blockText = '[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[this.chain.heights.length-1][0]].id)+']';
+
 				g.append('circle')
 					.attr('cx', height*this.dimensions)
 					.attr('cy', 0)
@@ -506,8 +557,10 @@ class Blockchain {
 					.attr('x', height*this.dimensions)
 					.attr('y', 0)
 					.attr('text-anchor', 'middle')
+					.attr('alignment-baseline', 'middle')
+					.attr('font-size', clusterFontSizeScale(blockText.length))
 					.attr('fill', 'white')
-					.html('[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[this.chain.heights.length-1][0]].id)+']');
+					.html(blockText);
 			}
 
 			height ++;

@@ -118,6 +118,7 @@ async function computeAndRender() {
 	forksGraph.addLine('Concurrent chains', forkValues);
 
 	blockchain.compactRender(g);
+	//blockchain.render(g);
 
 	d3v7.select('#goto-height').attr('placeholder', height)
 	d3v7.select('#generate_icon').attr('class', 'text-danger nav-icon far fa-play-circle');
