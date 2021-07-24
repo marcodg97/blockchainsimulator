@@ -258,14 +258,16 @@ class Blockchain {
 
 					//console.log('id: ', blockSelected['id']);
 
-				
+				if(!blockSelected["timestamp"]){
+					blockSelected["timestamp"]= Math.floor(Math.random() * Math.pow(10,7));
+				}
 				g.append('text')
 					.attr('x', (+rect.x) + (+margin.left*2))
 					.attr('y', (+rect.y) + (+margin.top*5))
 					.attr('fill', 'white')
 					.attr("id", 'rectTxt2'+blockSelected['id'])
 					.style("font-size", fontSize)
-					.text("Timestamp: " + Math.floor(Math.random() * 10^7));
+					.text("Timestamp: " + blockSelected["timestamp"]);
 
 				g.append('text')
 					.attr('x', (+rect.x) + (+margin.left*2))
@@ -273,7 +275,7 @@ class Blockchain {
 					.attr('fill', 'white')
 					.attr("id", 'rectTxt3'+blockSelected['id'])
 					.style("font-size", fontSize)
-					.text("Valore: "+ Math.floor(blockSelected["value"])+ "$");
+					.text("Valore: "+ Math.floor(blockSelected["value"])+ " $");
 		
 	}
 
