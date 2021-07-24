@@ -1,22 +1,60 @@
 class Graph {
 
-	constructor(elementId, type = 'line') {
+	constructor(elementId) {
 		this.chart = c3.generate({
 			bindto: elementId, 
 			data: {
 				x: 'x',
-				type: type,
+				type: 'line',
 				columns: [
 					['x']
-				]
+				],
+				axes: {
+					'Difficulty':'y',
+					'Concurrent chains':'y2'
+				}
+			},
+			axis : {
+				x : {
+					label : {
+						text: 'Height',
+						position: 'outer-center'
+					}
+				},
+				y : {
+					label : {
+						text: 'Difficulty',
+						position: 'outer-middle'
+					},
+					tick: {
+						format: function (d) { return Math.floor(d)},
+						count: 5
+					}
+				},
+				y2 : {
+					label : {
+						text: 'Concurrent chains',
+						position: 'outer-middle'
+					},
+					tick: {
+						fit: true,
+						format: function (d) { return Number.isInteger(d) ? d : ''}
+					},
+					show: true
+				}
 			},
 			point: {show: false},
 			zoom: {enabled: true},
 			legend: {position: 'inset'}
 		});
+
+		this.chart.data.colors({
+			'Difficulty' : 'red',
+			'Concurrent chain' : 'blue'
+		});
 	}
 
-	addLine(name, color, values = []) {
+	addLine(name, values = []) {
 		let x = ['x'];
 		let y = [name];
 
@@ -28,10 +66,29 @@ class Graph {
 		this.chart.load({
 			columns: [x,y]
 		});
+	}
 
-		let colorObj = {};
-		colorObj[name] = color;
-		this.chart.data.colors(colorObj);
+	addValues(difficulty, concurrentChains) {
+		let x = ['x']
+		let y = ['Difficulty']
+		let y2 = ['ConcurrentChains']
+
+		let y2Tick = 1;
+
+		difficulty.forEach((value) => {
+			x.push(value.x);
+			y.push(value.y);
+		});
+
+		concurrentChains.forEach((value) => {
+			y2.push(value.y);
+			if(value.y > y2Tick)
+				y2Tick = value.y;
+		});
+
+		this.chart.load({
+			columns: [x,y, y2]
+		});
 	}
 
 	removeLine(name) {
