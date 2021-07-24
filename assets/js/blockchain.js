@@ -181,9 +181,10 @@ class Blockchain {
 
 	showBlockDetails(block, height) {
 		d3.select('#blockDetailID').html('#'+block.id);
+		d3.select('#blockDetailMaster').html(block.render_height === 0 ? 'Master block':'Forked block');
 		d3.select('#blockDetailHeight').html(height);
 		d3.select('#blockDetailPred').html('#'+block.pred);
-		d3.select('#blockDetailNext').html(block.next1 != null ? (block.next2 != null ? ('#'+block.next1+' and '+block.next2):'#'+block.next1) : '-' )
+		d3.select('#blockDetailNext').html(block.next1 != null ? (block.next2 != null ? ('#'+block.next1+' and #'+block.next2):'#'+block.next1) : '-' )
 		d3.select('#blockDetailDifficulty').html(block.value);
 
 		$('#blockDetails').modal('show');
