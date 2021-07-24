@@ -1,5 +1,6 @@
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
+const viewBound = document.getElementById('main-view').clientHeight;
 
 const svg = d3v7.select('svg');
 const g = d3v7.select('g');
@@ -7,14 +8,10 @@ const g = d3v7.select('g');
 const RENDERING_WINDOW = 100;
 const MAX_GRAPH_TICK = 100;
 
-const viewBound = {
-	'up': document.getElementById('main-view').clientHeight/4,
-	'down': document.getElementById('main-view').clientHeight
-}
-
 const blockchain = new Blockchain(width);
 
-console.log(d3v7.version);
+var lastTransform = {x:0,y:0,k:1};
+var position = {x:0,y:0,k:0};
 
 /************************************************************************************************************************************************/
 
@@ -22,7 +19,7 @@ var forkProbability = 50000;
 var forkFertility = 50000;
 var blockNumber = 100;
 
-svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.25, 1.5]).on('zoom', zoomed));
+svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.15, 1.5]).on('zoom', zoomed));
 
 d3v7.select('#fork-prob-range').on('change', (event) => {forkProbability = event.srcElement.value;});
 d3v7.select('#fork-fertility').on('change', (event) => {forkFertility = event.srcElement.value;});
@@ -46,11 +43,6 @@ let lastTranslate = 0;
 function zoomed({transform}) {
 	let x = -1*transform.x;
 
-	if(transform.y < 0)
-		transform.y = 0;
-	else if(transform.y > viewBound.down)
-		transform.y = viewBound.down;
-
 	if(x > lastTranslate+blockchain.dimensions) {
 
 		lastTranslate = x+blockchain.dimensions;
@@ -69,11 +61,28 @@ function zoomed({transform}) {
 
 	}
 
-	g.attr('transform', transform);
+	position.x += (transform.x - lastTransform.x);
+	position.y += (transform.y - lastTransform.y);
+	position.k += (transform.k - lastTransform.k);
+	lastTransform = transform;
+
+	if(position.y < 0)
+		position.y = 0;
+	else if(position.y > viewBound)
+		position.y = viewBound;
+
+	g.attr('transform', 'translate('+position.x+','+position.y+') scale('+position.k+')');
+}
+
+function goToView(x,y) {
+	position.x = x;
+	position.y = y;
+	position.k = 1;
+
+	g.attr('transform','translate('+x+','+y+') scale(1)');
 }
 
 async function computeAndRender() {
-	d3v7.select('#generate_icon').attr('class', 'text-danger nav-icon fas fa-circle-notch fa-spin');
 	let height = (blockNumber/2) | 0;
 
 	await blockchain.compute(forkProbability, forkFertility, blockNumber);
@@ -114,12 +123,11 @@ async function computeAndRender() {
 		y: blockchain.chain.heights[blockchain.chain.heights.length-1].length
 	});
 
-	difficultyGraph.addLine('Difficulty', difficultyValues);
-	forksGraph.addLine('Concurrent chains', forkValues);
+	difficultyGraph.addLine('Difficulty', 'orange', difficultyValues);
+	forksGraph.addLine('Concurrent chains', 'orange', forkValues);
 
 	blockchain.compactRender(g);
 	//blockchain.render(g);
 
-	d3v7.select('#goto-height').attr('placeholder', height)
-	d3v7.select('#generate_icon').attr('class', 'text-danger nav-icon far fa-play-circle');
+	goToView(720, 256);
 }

@@ -27,6 +27,76 @@
 <body scroll='no' class='hold-transition sidebar-mini'>
 <div class='wrapper'>
 
+	<!-- Modals -->
+	<div class='modal fade' id='blockDetails' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+		<div class='modal-dialog' role='document'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<h5 class='modal-title' id='modalTitle'>Block Details</h5>
+					<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+						<span aria-hidden='true'>&times;</span>
+					</button>
+				</div>
+				<div class='modal-body'>
+					<table class='table table-borderless'>
+						<tbody>
+							<tr>
+								<th scope='row'>ID</th>
+								<td id='blockDetailID'>-</td>
+							</tr>
+							<tr>
+								<th scope='row'>Height</th>
+								<td id='blockDetailHeight'>-</td>
+							</tr>
+							<tr>
+								<th scope='row'>Pred</th>
+								<td id='blockDetailPred'>-</td>
+							</tr>
+							<tr>
+								<th scope='row'>Next</th>
+								<td id='blockDetailNext'>-</td>
+							</tr>
+							<tr>
+								<th scope='row'>Difficulty</th>
+								<td id='blockDetailDifficulty'>-</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='modal fade' id='blocksClusterDetails' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+		<div class='modal-dialog' role='document'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<h5 class='modal-title' id='modalTitle'>Cluster of blocks details</h5>
+					<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+						<span aria-hidden='true'>&times;</span>
+					</button>
+				</div>
+				<div class='modal-body'>
+					<table class='table table-borderless'>
+						<tbody>
+							<tr>
+								<th scope='row'>From block</th>
+								<td id='blocksClusterDetailFrom'>-</td>
+							</tr>
+							<tr>
+								<th scope='row'>To block</th>
+								<td id='blocksClusterDetailTo'>-</td>
+							</tr>
+							<tr>
+								<th scope='row'>Length</th>
+								<td id='blocksClusterDetailLength'>-</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Navbar -->
 	<nav class='main-header navbar navbar-expand navbar-white navbar-light'>
 		
@@ -112,7 +182,7 @@
 									<i class='fas fa-dice-d6'></i>
 									<p>Number of blocks</p>
 									<div class='slidecontainer'>
-										<input class='form-control form-control-sm' type='number' id='block-numbers' min='100' placeholder='100'>
+										<input class='form-control form-control-sm' type='number' id='block-numbers' min='1' placeholder='100'>
 									</div>
 								</div>
 							</li>
@@ -124,7 +194,7 @@
 										<div class='input-group-prepend'>
 											<span class='input-group-text'>1 of</span>
 										</div>
-										<input class='form-control form-control-sm' type='number' min='5' max='100000' value='50000' class='slider' id='fork-prob-range'>
+										<input class='form-control form-control-sm' type='number' min='1' max='100000' value='50000' class='slider' id='fork-prob-range'>
 									</div>
 								</div>
 							</li>
@@ -136,7 +206,7 @@
 										<div class='input-group-prepend'>
 											<span class='input-group-text'>1 of</span>
 										</div>
-										<input class='form-control form-control-sm' type='number' min='5' max='100000' value='500' class='slider' id='fork-fertility'>
+										<input class='form-control form-control-sm' type='number' min='1' max='100000' value='500' class='slider' id='fork-fertility'>
 									</div>
 								</div>
 							</li>

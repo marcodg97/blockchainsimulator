@@ -177,109 +177,17 @@ class Blockchain {
 		return this.chain;
 	}
 
-	selectedChain(e){
-
-		
-		var selector = e.target;
-		var idSelected = selector.getAttribute("id");
-		var colorSelected = selector.getAttribute("color");
-		var xblock = selector.getAttribute("cx");
-
-
-		var blockSelected = this.chain.blocks[idSelected];
-		
-		
-		var numValori= 3
-
-
-		var rect={
-			x: xblock - 100,
-			y: 400,
-			/*
-			width: 960- margin.left - margin.right,
-			height: 500 - margin.top - margin.bottom
-			*/
-			width: 100*(numValori*2+1),
-			height: 40*(numValori*2+1)
-			
-		};
-
-		var margin = {
-			top: rect.height/(numValori*2+1), 
-			bottom: rect.height/(numValori*2+1), 
-			right: rect.width*0.15, 
-			left: rect.width*0.1,
-		}
-		var fontSize = 50;
-
-		/*
-		
-		
-		*/
-
-
-		if(this.getClickedBlock()!== null){
-			//console.log('Cancellando: ', this.getClickedBlock()["id"]);
-			
-			
-			d3v7.select('#rect'+(this.getClickedBlock()["id"])).remove();
-
-			d3v7.select('#rectTxt1'+(this.getClickedBlock()["id"])).remove();
-			d3v7.select('#rectTxt2'+(this.getClickedBlock()["id"])).remove();
-			d3v7.select('#rectTxt3'+(this.getClickedBlock()["id"])).remove();
-			
-		}
-			this.setClickedBlock(blockSelected) ;
-	
-	
-			g.append('rect')
-				.attr('x', rect.x)
-				.attr('y', rect.y)
-				.attr('rx', 20)
-				.attr('ry', 20)
-				.attr('width', rect.width)
-				.attr('height', rect.height)
-				.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-				.attr("id", 'rect'+blockSelected['id'])
-				.style('fill', colorSelected);
-
-
-				
-
-
-				g.append('text')
-					.attr('x', (+rect.x) + (+margin.left*2))
-					.attr('y', (+rect.y) + (+margin.top*3))
-					.attr('fill', 'white')
-					.attr("id", 'rectTxt1'+blockSelected['id'])
-					.style("font-size", fontSize)
-					.text("Nodo "+ blockSelected['id']);
-
-					//console.log('id: ', blockSelected['id']);
-
-				if(!blockSelected["timestamp"]){
-					blockSelected["timestamp"]= Math.floor(Math.random() * Math.pow(10,7));
-				}
-				g.append('text')
-					.attr('x', (+rect.x) + (+margin.left*2))
-					.attr('y', (+rect.y) + (+margin.top*5))
-					.attr('fill', 'white')
-					.attr("id", 'rectTxt2'+blockSelected['id'])
-					.style("font-size", fontSize)
-					.text("Timestamp: " + blockSelected["timestamp"]);
-
-				g.append('text')
-					.attr('x', (+rect.x) + (+margin.left*2))
-					.attr('y', (+rect.y) + (+margin.top*7))
-					.attr('fill', 'white')
-					.attr("id", 'rectTxt3'+blockSelected['id'])
-					.style("font-size", fontSize)
-					.text("Valore: "+ Math.floor(blockSelected["value"])+ " $");
-		
-	}
-
-
 	/***************************************************************************************************/
+
+	showBlockDetails(block, height) {
+		d3.select('#blockDetailID').html('#'+block.id);
+		d3.select('#blockDetailHeight').html(height);
+		d3.select('#blockDetailPred').html('#'+block.pred);
+		d3.select('#blockDetailNext').html(block.next1 != null ? (block.next2 != null ? ('#'+block.next1+' and '+block.next2):'#'+block.next1) : '-' )
+		d3.select('#blockDetailDifficulty').html(block.value);
+
+		$('#blockDetails').modal('show');
+	}
 
 	compactRender(svg, clearBefore = true, height = 0) {
 		this.compact = true;
@@ -471,9 +379,9 @@ class Blockchain {
 						.attr('r', this.dimensions/5)
 						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('stroke', '#0a444d')
-						.on('click', (event) => {this.selectedChain(event);})
-						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
+						.on('click', () => { this.showBlockDetails(block, j+1); })
+						.on('mouseover', () => {event.srcElement.style.fill = '#128091'})
+						.on('mouseout', () => {event.srcElement.style.fill = (block.render_height === 0 ? '#17a2b8' : '#5747d1')});
 
 					g.append('text')
 						.attr('x', height*this.dimensions)
@@ -514,7 +422,7 @@ class Blockchain {
 						.attr('r', this.dimensions/5)
 						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('stroke', '#0a444d')
-						.on('click', (event) => {this.selectedChain(event);})
+						.on('click', (event) => {console.log('->',event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
@@ -611,7 +519,7 @@ class Blockchain {
 						.attr('r', this.dimensions/5)
 						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('stroke', '#0a444d')
-						.on('click', (event) => {this.selectedChain(event);})
+						.on('click', (event) => {console.log('->',event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
@@ -660,7 +568,7 @@ class Blockchain {
 						.attr('r', this.dimensions/5)
 						.attr('color', '#17a2b8')
 						.style('fill', '#17a2b8')
-						.on('click', (event) => {this.selectedChain(event);})
+						.on('click', (event) => {console.log('->',event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
