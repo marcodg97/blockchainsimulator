@@ -11,19 +11,14 @@ svg {
 	padding: 0 !important;
 }
 
-.thumbnail-view {
-	width: 100%;
-	height: calc(10vh - 57px);
-}
-
 .blockchain-view {
 	width: 100%;
-	height: calc(80vh - 29px);
+	height: calc(80vh - 77px);
 }
 
 .graph-view {
 	width: 100%;
-	height: calc(20vh - 27px);
+	height: calc(20vh - 78px);
 }
 
 .slidecontainer {

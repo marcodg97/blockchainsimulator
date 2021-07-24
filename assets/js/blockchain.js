@@ -55,7 +55,7 @@ class Blockchain {
 		id +=1;
 
 		let flag;
-		while(id<blocksNumber) {
+		while(id<=blocksNumber) {
 			flag = false;
 			this.chain.heights.push([]);
 
@@ -140,8 +140,6 @@ class Blockchain {
 
 		}
 
-		console.log(this.chain)
-
 		for(let i=0; i<this.chain.heights.length; i++) {
 
 			let blockHeights = [];
@@ -163,7 +161,7 @@ class Blockchain {
 
 				if(block.next2 !== null) {
 
-					let multiplier = block.render_height === 0 ? (this.chain.heights[i].length % 2 ? -1:1) : (block.render_height > 0 ? 1:-1);
+					let multiplier = block.render_height === 0 ? (forkFertility == probability == 1 ? (this.chain.heights[i].length % 2 ? -1:1) : Math.random() < 0.5 ? 1:-1) : (block.render_height > 0 ? 1:-1);
 					this['chain']['blocks'][block.next2]['render_height'] = block.render_height + (multiplier*this.dimensions);	
 
 					while(blockHeights.includes(this['chain']['blocks'][block.next2]['render_height'])) {
@@ -297,7 +295,7 @@ class Blockchain {
 				collecting = false;
 
 				compactChain.push({
-					from: from-1,
+					from: from,
 					to: i-1
 				});
 
@@ -314,8 +312,6 @@ class Blockchain {
 			});
 		}
 
-		console.log(compactChain);
-
 		/*********************************************************************/
 
 		let shuttle = 0;
@@ -329,26 +325,45 @@ class Blockchain {
 				.attr('x2', (height+1)*this.dimensions)
 				.attr('y2', height*this.dimensions)
 				.attr('style', 'stroke:#000');
+
+			if(compactChain[0].from === 0) {
+				console.log(compactChain);
+				return;
+			}
+
+			if(this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].next2 != null) {
+				let block = this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]]
+
+				g.append('path')
+					.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height+1)*this.dimensions)+','+block.render_height+' '+(height*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((height+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+					.attr('stroke','black')
+					.attr('fill', 'transparent')
+			}
+
 			g.append('circle')
 				.attr('cx', height*this.dimensions)
 				.attr('cy', height*this.dimensions)
 				.attr('r', this.dimensions/2)
-				.style('fill', '#68b2a1');
+				.style('fill', '#17a2b8')
+				.style('stroke', '#0a444d');
 			g.append('text')
 				.attr('x', height*this.dimensions)
 				.attr('y', height*this.dimensions)
 				.attr('text-anchor', 'middle')
+				.attr('fill', 'white')
 				.html('[#1-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']');
 		} else {
 			g.append('circle')
 				.attr('cx', height*this.dimensions)
 				.attr('cy', height*this.dimensions)
 				.attr('r', this.dimensions/2)
-				.style('fill', '#68b2a1');
+				.style('fill', '#17a2b8')
+				.style('stroke', '#0a444d');
 			g.append('text')
 				.attr('x', height*this.dimensions)
 				.attr('y', height*this.dimensions)
 				.attr('text-anchor', 'middle')
+				.attr('fill', 'white')
 				.html('[#1-#'+(this.chain.heights.length)+']');
 		}
 
@@ -356,6 +371,9 @@ class Blockchain {
 		for(let i=0; i<compactChain.length; i++) {
 
 			for(let j=compactChain[i].from; j<=compactChain[i].to; j++) {
+
+				if(this.chain.heights[j] == undefined)
+					return;
 
 				g = svg.append('g').attr('id',height)
 				// J -> blockchain height
@@ -412,16 +430,17 @@ class Blockchain {
 						.attr('cx', height*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
-						.attr('color', '#68b2a1')
-						.style('fill', '#68b2a1')
+						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
+						.style('stroke', '#0a444d')
 						.on('click', (event) => {this.selectedChain(event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
 					g.append('text')
 						.attr('x', height*this.dimensions)
 						.attr('y', block.render_height)
 						.attr('text-anchor', 'middle')
+						.attr('fill', 'white')
 						.html('#'+block.id)
 				}
 
@@ -436,32 +455,44 @@ class Blockchain {
 					.attr('y2', 0)
 					.attr('style', 'stroke:#000');
 
+				if(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].next2 != null) {
+					let block = this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]]
+
+					g.append('path')
+						.attr('d', 'M'+(height*this.dimensions)+','+block.render_height+' C'+((height+1)*this.dimensions)+','+block.render_height+' '+(height*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((height+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
+						.attr('stroke','black')
+						.attr('fill', 'transparent')
+				}
+
 				if(compactChain[i].to-compactChain.from === 1) {
 					g.append('circle')
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
 						.attr('r', this.dimensions/5)
-						.attr('color', '#68b2a1')
-						.style('fill', '#68b2a1')
+						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
+						.style('stroke', '#0a444d')
 						.on('click', (event) => {this.selectedChain(event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
 					g.append('text')
 						.attr('x', height*this.dimensions)
 						.attr('y', 0)
 						.attr('text-anchor', 'middle')
+						.attr('fill', 'white')
 						.html('#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id))
 				} else {
 					g.append('circle')
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
 						.attr('r', this.dimensions/2)
-						.style('fill', '#68b2a1');
+						.style('fill', '#17a2b8')
+						.style('stroke', '#0a444d');
 					g.append('text')
 						.attr('x', height*this.dimensions)
 						.attr('y', 0)
 						.attr('text-anchor', 'middle')
+						.attr('fill', 'white')
 						.html('[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id)+']');
 				}
 			} else {
@@ -469,11 +500,13 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', 0)
 					.attr('r', this.dimensions/2)
-					.style('fill', '#68b2a1');
+					.style('fill', '#17a2b8')
+					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('x', height*this.dimensions)
 					.attr('y', 0)
 					.attr('text-anchor', 'middle')
+					.attr('fill', 'white')
 					.html('[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[this.chain.heights.length-1][0]].id)+']');
 			}
 
@@ -523,11 +556,11 @@ class Blockchain {
 						.attr('cx', (i-from)*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
-						.attr('color', '#68b2a1')
-						.style('fill', '#68b2a1')
+						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
+						.style('stroke', '#0a444d')
 						.on('click', (event) => {this.selectedChain(event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
 					g.append('text')
 						.attr('x', (i-from)*this.dimensions)
@@ -572,11 +605,11 @@ class Blockchain {
 						.attr('cx', (i-this.offset)*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
-						.attr('color', '#68b2a1')
-						.style('fill', '#68b2a1')
+						.attr('color', '#17a2b8')
+						.style('fill', '#17a2b8')
 						.on('click', (event) => {this.selectedChain(event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#68b2a1";})
+						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
 					g.append('text')
 						.attr('x', (i-this.offset)*this.dimensions)
