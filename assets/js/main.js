@@ -11,7 +11,7 @@ const MAX_GRAPH_TICK = 100;
 const blockchain = new Blockchain(width);
 
 var lastTransform = {x:0,y:0,k:1};
-var position = {x:0,y:0,k:0};
+var position = {x:0,y:0,k:1};
 
 /************************************************************************************************************************************************/
 
@@ -127,6 +127,6 @@ async function computeAndRender() {
 
 	blockchain.compactRender(g);
 	//blockchain.render(g);
-
-	goToView(720, 256);
 }
+
+goToView(720, 256);
