@@ -2,7 +2,7 @@ class Graph {
 
 	constructor(elementId) {
 		this.chart = c3.generate({
-			bindto: elementId, 
+			bindto: elementId,
 			data: {
 				x: 'x',
 				type: 'line',

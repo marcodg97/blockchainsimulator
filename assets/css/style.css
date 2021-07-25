@@ -13,12 +13,13 @@ svg {
 
 .blockchain-view {
 	width: 100%;
-	height: calc(80vh - 77px);
+	height: calc(75vh - 77px);
 }
 
 .graph-view {
 	width: 100%;
-	height: calc(20vh - 78px);
+	max-height: 150px;
+	height: calc(25vh - 78px);
 }
 
 .slidecontainer {
