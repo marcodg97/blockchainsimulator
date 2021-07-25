@@ -3,7 +3,8 @@ class Blockchain {
 	constructor(width, dimensions = 120) {
 		this.chain = {
 			'heights':[],
-			'blocks':{}
+			'blocks':{},
+			'positions':[]
 		};
 
 		this.forks = [];
@@ -17,7 +18,8 @@ class Blockchain {
 	clear() {
 		this.chain = {
 			'heights':[],
-			'blocks':{}
+			'blocks':{},
+			'positions':[]
 		};
 
 		this.forks = [];
@@ -34,8 +36,12 @@ class Blockchain {
 		this.clickedBlock = oBlock;
 	}
 
-	chooseBlockPositionMultiplier(blockInHeight) {
+	heightPosition(height) {
+		for(let i=0; i<this.chain.positions.length; i++)
+			if(this.chain.positions[i].height >= height)
+				return -1*(this.chain.positions[i].position - (this.chain.positions[i].height === height ? 0 : this.width/2));
 
+		return 0;
 	}
 
 	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
@@ -264,8 +270,6 @@ class Blockchain {
 		let mediumClusterLength = Math.floor((2*maxClusterLenght/3)-1);
 
 		let clusterLengthScale = function(length) {
-			console.log(length);
-
 			if(length < shortClusterLenght)
 				return '#108193';
 			if(length < mediumClusterLength)
@@ -397,6 +401,11 @@ class Blockchain {
 					.attr('y', -1.5*this.dimensions)
 					.html(j)
 					.style('fill', '#aaa')
+
+				this.chain.positions.push({
+					height: j,
+					position: height*this.dimensions
+				});
 
 				for(let k=0; k<this.chain.heights[j].length; k++) {
 					let block = this['chain']['blocks'][this.chain.heights[j][k]];

@@ -11,6 +11,14 @@ svg {
 	padding: 0 !important;
 }
 
+.info-box {
+	max-height: 80px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-left-radius: 0.25em;
+	border-bottom-right-radius: 0.25em;
+}
+
 .card {
 	padding: 0;
 }

@@ -25,12 +25,13 @@ d3v7.select('#fork-prob-range').on('change', (event) => {forkProbability = event
 d3v7.select('#fork-fertility').on('change', (event) => {forkFertility = event.srcElement.value;});
 d3v7.select('#block-numbers').on('change', (event) => {blockNumber = event.srcElement.value;});
 
-d3v7.select('#goto-height').on('change', (event) => {
-	if(event.srcElement.value < RENDERING_WINDOW)
-		blockchain.render(g, 0, RENDERING_WINDOW);
-	else
-		blockchain.render(g, parseInt(event.srcElement.value,10)-RENDERING_WINDOW, parseInt(event.srcElement.value,10)+RENDERING_WINDOW);
+d3v7.select('#searchBtnHeight').on('click', () => {
+	goToView(blockchain.heightPosition($('#goto-height').val()), height/2);
 });
+
+d3v7.select('#searchBtnBlock').on('click', () => {
+	goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height), height/2);
+})
 
 /************************************************************************************************************************************************/
 
