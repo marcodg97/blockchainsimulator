@@ -129,4 +129,4 @@ async function computeAndRender() {
 	//blockchain.render(g);
 }
 
-goToView(720, 256);
+goToView((width/2)-250, (height/2)-155);
