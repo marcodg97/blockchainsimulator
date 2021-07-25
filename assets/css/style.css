@@ -11,6 +11,15 @@ svg {
 	padding: 0 !important;
 }
 
+.card {
+	padding: 0;
+}
+
+.card-body {
+	text-align: center;
+	color: white;
+}
+
 .blockchain-view {
 	width: 100%;
 	height: calc(75vh - 77px);

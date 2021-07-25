@@ -126,7 +126,8 @@ async function computeAndRender() {
 	graph.addLine('Concurrent chains', forkValues);
 
 	blockchain.compactRender(g);
+	goToView((width/2)-250, 240);
 	//blockchain.render(g);
 }
 
-goToView((width/2)-250, (height/2)-155);
+goToView((width/2)-250, height/3);

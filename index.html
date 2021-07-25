@@ -238,22 +238,26 @@
 				<div class='row'>
 					<div class='col-6'>			
 						<div class='info-box'>
-							<span class='info-box-icon bg-info elevation-1'><i class='fas fa-sitemap'></i></span>
-							<div class='info-box-content'>
-								<span class='info-box-text'>Graph display</span>
-								<div class='btn-group btn-group-toggle' data-toggle='buttons'>
-									<label class='btn btn-outline-info focus active'><input id='graphTypeExpanded' type='radio' name='options' autocomplete='off'>Expanded</label>
-									<label class='btn btn-outline-info'><input id='graphTypeClustered' type='radio' name='options' autocomplete='off'>Clustered</label>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class='col-6'>			
-						<div class='info-box'>
 							<span class='info-box-icon bg-info elevation-1'><i class='fas fa-level-up-alt'></i></span>
 							<div class='info-box-content'>
 								<span class='info-box-text'>Go to height</span>
 								<input id='goto-height' class='form-control form-control-sm btn-outline-info' type='number' id='block-numbers' min='0'>
+							</div>
+						</div>
+					</div>
+					<div class='col-6'>
+						<div class='info-box' style='height: 80px;'>
+							<div class='col-3'>
+								<div class='card' style='background-color: #17a2b8;'><div class='card-body' id='legend-single'><span>Single node</span></div></div>
+							</div>
+							<div class='col-3'>
+								<div class='card' style='background-color: #108193;'><div class='card-body' id='legend-short'><span>Short cluster</span></div></div>
+							</div>
+							<div class='col-3'>
+								<div class='card' style='background-color: #0a515c;'><div class='card-body' id='legend-medium'><span>Medium cluster</span></div></div>
+							</div>
+							<div class='col-3'>
+								<div class='card' style='background-color: #042024;'><div class='card-body' id='legend-long'><span>Long cluster</span></div></div>
 							</div>
 						</div>
 					</div>
@@ -266,8 +270,7 @@
 								<line x1="-120" y1="0" x2="0" y2="0" style="stroke:#000; stroke-dasharray:5,5"></line>
 								<path d="M0,0 C120,0 0,-120 120,-120" stroke="black" fill="transparent"></path>
 								<circle cx="0" cy="0" r="60" style="fill: rgb(23, 162, 184); stroke: rgb(10, 68, 77);"></circle>
-								<text x="0" y="-12" text-anchor="middle" alignment-baseline="middle" font-size="18" fill="white">From ID block</text>
-								<text x="0" y="12" text-anchor="middle" alignment-baseline="middle" font-size="18" fill="white">To ID block</text>
+								<text x="0" y="0" text-anchor="middle" alignment-baseline="middle" font-size="18" fill="white">[#ID-#ID]</text>
 								<line x1="120" y1="-5760" x2="120" y2="5760" style="stroke:#aaa; stroke-dasharray:5,5"></line>
 								<text x="130" y="-180" style="fill: rgb(170, 170, 170);">Height</text>
 								<line x1="120" y1="0" x2="240" y2="0" style="stroke:#000"></line>
@@ -279,10 +282,13 @@
 								<line x1="240" y1="0" x2="360" y2="0" style="stroke:#000; stroke-dasharray:5,5"></line>
 								<circle cx="240" cy="0" r="60" style="fill: rgb(23, 162, 184); stroke: rgb(10, 68, 77);"></circle>
 								<text x="240" y="0" text-anchor="middle" alignment-baseline="middle" font-size="17" fill="white">[#ID-#ID]</text>
+								<text x="0" y="80" text-anchor="middle" alignment-baseline="middle" fill="#17a2b8" stroke="#0a444d" stroke-width="0.3" font-size="18">Cluster of blocks</text>
+								<text x="0" y="100" text-anchor="middle" alignment-baseline="middle" fill="#17a2b8" stroke="#0a444d" stroke-width="0.3" font-size="18">[from ID - to ID]</text>
 							</g>
 						</svg>
 					</div>
 				</div>
+
 				<div class='row graph-view'>
 					<div class='col-sm-12' id='graph'></div>
 				</div>

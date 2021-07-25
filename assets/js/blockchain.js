@@ -196,6 +196,7 @@ class Blockchain {
 			svg.html('');
 
 		let compactChain = [];
+		let maxClusterLenght = 1;
 
 		let from = 0;
 		let collecting = false;
@@ -203,6 +204,9 @@ class Blockchain {
 		for(let i=1; i<this.chain.heights.length; i++) {
 			if(this.chain.heights[i].length == 1 && collecting && this.chain.heights[i+1] && this.chain.heights[i+1].length == 1) {
 				collecting = false;
+
+				if(compactChain.length > 0 && from-compactChain[compactChain.length-1].to > maxClusterLenght)
+					maxClusterLenght = from-compactChain[compactChain.length-1].to;
 
 				compactChain.push({
 					from: from,
@@ -215,6 +219,9 @@ class Blockchain {
 			}
 		}
 
+		if(maxClusterLenght === 1)
+			maxClusterLenght = this.chain.heights.length;
+
 		if(collecting) {
 			compactChain.push({
 				from:from,
@@ -223,6 +230,13 @@ class Blockchain {
 		}
 
 		/*********************************************************************/
+
+		console.log(maxClusterLenght);
+
+		d3.select('#legend-single').html('1');
+		d3.select('#legend-short').html('2-'+Math.floor((maxClusterLenght/3)-1));
+		d3.select('#legend-medium').html(Math.floor(maxClusterLenght/3)+'-'+Math.floor((2*maxClusterLenght/3)-1));
+		d3.select('#legend-long').html(Math.floor(2*maxClusterLenght/3)+'-'+(maxClusterLenght));
 
 		let clusterFontSizeScale = d3.scaleLinear().domain([7,20]).range([26,10]);
 		let fontSizeScale = d3.scaleLinear().domain([2,9]).range([24,9]);
@@ -285,7 +299,7 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/5)
-					.style('fill', '#17a2b8')
+					.style('fill', '#042024')
 					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('x', height*this.dimensions)
@@ -301,7 +315,7 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/2)
-					.style('fill', '#17a2b8')
+					.style('fill', '#042024')
 					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('x', height*this.dimensions)
