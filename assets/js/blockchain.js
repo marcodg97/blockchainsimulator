@@ -34,6 +34,10 @@ class Blockchain {
 		this.clickedBlock = oBlock;
 	}
 
+	chooseBlockPositionMultiplier(blockInHeight) {
+
+	}
+
 	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
 		let h = 0;
 		let value = blocksNumber*valueFactor;
@@ -161,7 +165,7 @@ class Blockchain {
 
 				if(block.next2 !== null) {
 
-					let multiplier = block.render_height === 0 ? (forkFertility == probability == 1 ? (this.chain.heights[i].length % 2 ? -1:1) : Math.random() < 0.5 ? 1:-1) : (block.render_height > 0 ? 1:-1);
+					let multiplier = block.render_height === 0 ? (forkFertility == probability == 1 ? (this.chain.heights[i].length % 2 ? -1:1) : (Math.random() < 0.5 ? 1:-1)) : (block.render_height > 0 ? 1:-1);
 					this['chain']['blocks'][block.next2]['render_height'] = block.render_height + (multiplier*this.dimensions);	
 
 					while(blockHeights.includes(this['chain']['blocks'][block.next2]['render_height'])) {

@@ -15,9 +15,9 @@ var position = {x:0,y:0,k:1};
 
 /************************************************************************************************************************************************/
 
-var forkProbability = 50000;
-var forkFertility = 50000;
-var blockNumber = 100;
+var forkProbability = 5000;
+var forkFertility = 5;
+var blockNumber = 500000;
 
 svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.15, 1.5]).on('zoom', zoomed));
 
