@@ -190,6 +190,10 @@ class Blockchain {
 		$('#blockDetails').modal('show');
 	}
 
+	clusterLengthScale(length) {
+		
+	}
+
 	compactRender(svg, clearBefore = true, height = 0) {
 		this.compact = true;
 		if(clearBefore)
@@ -227,16 +231,31 @@ class Blockchain {
 				from:from,
 				to: this.chain.heights.length
 			});
+
+			if(from-compactChain[compactChain.length-1].to > maxClusterLenght)
+				maxClusterLenght = from-compactChain[compactChain.length-1].to;
 		}
 
 		/*********************************************************************/
 
-		console.log(maxClusterLenght);
+		let shortClusterLenght = Math.floor((maxClusterLenght/3)-1);
+		let mediumClusterLength = Math.floor((2*maxClusterLenght/3)-1);
+
+		let clusterLengthScale = function(length) {
+			console.log(length);
+
+			if(length < shortClusterLenght)
+				return '#108193';
+			if(length < mediumClusterLength)
+				return '#0a515c';
+			
+			return '#042024';
+		}
 
 		d3.select('#legend-single').html('1');
-		d3.select('#legend-short').html('2-'+Math.floor((maxClusterLenght/3)-1));
-		d3.select('#legend-medium').html(Math.floor(maxClusterLenght/3)+'-'+Math.floor((2*maxClusterLenght/3)-1));
-		d3.select('#legend-long').html(Math.floor(2*maxClusterLenght/3)+'-'+(maxClusterLenght));
+		d3.select('#legend-short').html('2-'+(shortClusterLenght-1));
+		d3.select('#legend-medium').html(shortClusterLenght+'-'+(mediumClusterLength-1));
+		d3.select('#legend-long').html(mediumClusterLength+'-'+maxClusterLenght);
 
 		let clusterFontSizeScale = d3.scaleLinear().domain([7,20]).range([26,10]);
 		let fontSizeScale = d3.scaleLinear().domain([2,9]).range([24,9]);
@@ -281,7 +300,7 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/2)
-					.style('fill', '#17a2b8')
+					.style('fill', clusterLengthScale(compactChain[0].from))
 					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('x', height*this.dimensions)
@@ -456,7 +475,7 @@ class Blockchain {
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
 						.attr('r', this.dimensions/2)
-						.style('fill', '#17a2b8')
+						.style('fill', clusterLengthScale(compactChain[i+1].from-1 - compactChain[i].to+1))
 						.style('stroke', '#0a444d');
 					g.append('text')
 						.attr('x', height*this.dimensions)
@@ -474,7 +493,7 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', 0)
 					.attr('r', this.dimensions/2)
-					.style('fill', '#17a2b8')
+					.style('fill', clusterLengthScale(this.chain.heights.length-1 - compactChain[i].to+1))
 					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('x', height*this.dimensions)
