@@ -12,6 +12,8 @@ class Blockchain {
 		this.offset = 0;
 		this.clickedBlock = null;
 		this.width = width;
+		this.foundBlock = null;
+		this.foundHeights = [];
 	}
 
 	clear() {
@@ -25,6 +27,12 @@ class Blockchain {
 	}
 
 	heightPosition(height, bFoundHeight=true) {
+		if(height>this.chain.positions[this.chain.positions.length -1].height){
+			if(bFoundHeight){
+				this.colorSelectedHeights(this.chain.positions.length-1, height);
+			}
+			return -1*(this.chain.positions[this.chain.positions.length -1].position - this.width/2);
+		}
 
 		for(let i=0; i<this.chain.positions.length; i++){
 			if(this.chain.positions[i].height >= height){
@@ -36,9 +44,7 @@ class Blockchain {
 				}else return -1*(this.chain.positions[i].position - this.width/2);
 
 			}
-			if(height>this.chain.positions[this.chain.positions.length -1].height){
-				return -1*(this.chain.positions[this.chain.positions.length -1].position - this.width/2);
-			}
+			
 			
 
 		}
@@ -52,7 +58,15 @@ class Blockchain {
 			
 		}else{
 			index<1 ? this.foundHeights[0] = 0 : this.foundHeights[0] = this.chain.positions[index-1].height;
-			height>this.chain.positions[this.chain.positions.length -1].height ? this.foundHeights[1] = 0 : this.foundHeights[1] = this.chain.positions[index].height;
+			
+			if(height>this.chain.positions[this.chain.positions.length -1].height){
+
+				this.foundHeights[1] = 0;
+				this.foundHeights[0] = this.chain.positions[index].height;
+
+			}else{
+				this.foundHeights[1] = this.chain.positions[index].height;
+			}
 		}
 	}
 
