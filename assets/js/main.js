@@ -44,26 +44,6 @@ const graph = new Graph('#graph');
 
 let lastTranslate = 0;
 function zoomed({transform}) {
-	let x = -1*transform.x;
-
-	if(x > lastTranslate+blockchain.dimensions) {
-
-		lastTranslate = x+blockchain.dimensions;
-
-		blockchain.render(g, blockchain.renderized_to, blockchain.renderized_to+10, false);
-		blockchain.removeFirst(2);
-
-	} else if(x < lastTranslate-blockchain.dimensions) {
-
-		lastTranslate = x-blockchain.dimensions;
-
-		if(blockchain.renderized_from > 0) {
-			blockchain.render(g, blockchain.renderized_from-10, blockchain.renderized_from, false);
-			blockchain.removeLast(2);
-		}
-
-	}
-
 	position.x += (transform.x - lastTransform.x);
 	position.y += (transform.y - lastTransform.y);
 	position.k += (transform.k - lastTransform.k);

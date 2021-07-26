@@ -10,7 +10,6 @@ class Blockchain {
 		this.forks = [];
 		this.dimensions = dimensions;
 		this.offset = 0;
-		this.renderized_from = this.renderized_to = undefined;
 		this.clickedBlock = null;
 		this.width = width;
 	}
@@ -23,17 +22,6 @@ class Blockchain {
 		};
 
 		this.forks = [];
-	}
-
-	forks() {
-		return this.forks;
-	}
-	getClickedBlock(){
-		return this.clickedBlock;
-	}
-	
-	setClickedBlock(oBlock){
-		this.clickedBlock = oBlock;
 	}
 
 	heightPosition(height) {
@@ -216,10 +204,6 @@ class Blockchain {
 			});
 
 		$('#blocksClusterDetails').modal('show');
-	}
-
-	clusterLengthScale(length) {
-		
 	}
 
 	compactRender(svg, clearBefore = true, height = 0) {
@@ -551,128 +535,6 @@ class Blockchain {
 
 		}
 
-	}
-
-	render(svg, from = 0, to = 100, clearBefore = true) {
-		this.compact = false;
-
-		if(to > this.chain.heights.length)
-			to = this.chain.heights.length;
-
-		var g;
-
-		if(clearBefore) {
-			svg.html('');
-
-			this.renderized_from = this.offset = from;
-			this.renderized_to = to;
-
-			for(let i=from; i<to; i++) {
-
-				g = svg.append('g').attr('id','height-'+i);
-
-				for(let j=0; j<this.chain.heights[i].length; j++) {
-					let block = this['chain']['blocks'][this.chain.heights[i][j]];
-
-					if(block.next1 !== null)
-						g.append('line')
-							.attr('x1', (i-from)*this.dimensions)
-							.attr('y1', block.render_height)
-							.attr('x2', (i-from+1)*this.dimensions)
-							.attr('y2', block.render_height)
-							.attr('style', 'stroke:#000')
-
-					if(block.next2 !== null)
-						g.append('path')
-							.attr('d', 'M'+((i-from)*this.dimensions)+','+block.render_height+' C'+((i-from+1)*this.dimensions)+','+block.render_height+' '+((i-from)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i-from+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
-							.attr('stroke','black')
-							.attr('fill', 'transparent')
-
-					g.append('circle')
-						.attr("id",block['id'])
-						.attr('cx', (i-from)*this.dimensions)
-						.attr('cy', block.render_height)
-						.attr('r', this.dimensions/5)
-						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
-						.style('stroke', '#0a444d')
-						.on('click', (event) => {console.log('->',event);})
-						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
-
-					g.append('text')
-						.attr('x', (i-from)*this.dimensions)
-						.attr('y', block.render_height)
-						.attr('text-anchor', 'middle')
-						.html(block.id)
-
-				}
-			}
-
-		} else {
-
-			if(this.renderized_from > from)
-				this.renderized_from = from;
-
-			if(this.renderized_to < to)
-				this.renderized_to = to;
-
-			for(let i=from; i<to; i++) {
-
-				g = svg.append('g').attr('id','height-'+i);
-
-				for(let j=0; j<this.chain.heights[i].length; j++) {
-					let block = this['chain']['blocks'][this.chain.heights[i][j]];
-
-					if(block.next1 !== null)
-						g.append('line')
-							.attr('x1', (i-this.offset)*this.dimensions)
-							.attr('y1', block.render_height)
-							.attr('x2', (i-this.offset+1)*this.dimensions-(this.dimensions/5))
-							.attr('y2', block.render_height)
-							.attr('style', 'stroke:#000')
-
-					if(block.next2 !== null)
-						g.append('path')
-							.attr('d', 'M'+((i-this.offset)*this.dimensions)+','+block.render_height+' C'+((i-this.offset+1)*this.dimensions)+','+block.render_height+' '+((i-this.offset)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height']+' '+((i-this.offset+1)*this.dimensions)+','+this['chain']['blocks'][block['next2']]['render_height'])
-							.attr('stroke','black')
-							.attr('fill', 'transparent')
-
-					g.append('circle')
-						.attr("id",block['id'])
-						.attr('cx', (i-this.offset)*this.dimensions)
-						.attr('cy', block.render_height)
-						.attr('r', this.dimensions/5)
-						.attr('color', '#17a2b8')
-						.style('fill', '#17a2b8')
-						.on('click', (event) => {console.log('->',event);})
-						.on('mouseover', (event) => {event.srcElement.style.fill = "red";})
-						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
-
-					g.append('text')
-						.attr('x', (i-this.offset)*this.dimensions)
-						.attr('y', block.render_height)
-						.attr('text-anchor', 'middle')
-						.html(block.id)
-
-				}
-			}
-
-		}
-
-	}
-
-	removeFirst(toRemove) {
-		for(let i=this.renderized_from; i<this.renderized_from+toRemove; i++)
-			d3v7.select('#height-'+i).remove();
-
-		this.renderized_from += toRemove;
-	}
-
-	removeLast(toRemove) {
-		for(let i=this.renderized_to; i<this.renderized_to-toRemove; i--)
-			d3v7.select('#height-'+i).remove();
-
-		this.renderized_to -= toRemove;
 	}
 
 }
