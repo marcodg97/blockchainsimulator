@@ -43,11 +43,14 @@ const graph = new Graph('#graph');
 /************************************************************************************************************************************************/
 
 let lastTranslate = 0;
+let lastPositionK = 0;
+let lastPositionX = 0;
+let lastPositionY = 0;
 function zoomed({transform}) {
 	position.x += (transform.x - lastTransform.x);
-	position.y += (transform.y - lastTransform.y);
+	position.y += (transform.y - lastTransform.y);	
 	position.k += (transform.k - lastTransform.k);
-	lastTransform = transform;
+	lastTransform = transform; 	
 
 	if(position.y < 0)
 		position.y = 0;
@@ -114,4 +117,4 @@ async function computeAndRender() {
 	//blockchain.render(g);
 }
 
-goToView((width/2)-250, height/3);
+goToView((width/2)-250, height/3 -40);
