@@ -44,9 +44,6 @@ class Blockchain {
 				}else return -1*(this.chain.positions[i].position - this.width/2);
 
 			}
-			
-			
-
 		}
 		
 		return 0;
@@ -69,6 +66,18 @@ class Blockchain {
 				this.foundHeights[1] = this.chain.positions[index].height;
 			}
 		}
+	}
+	colorSelectedBlock(xBlock, yBlock) {
+
+		console.log(xBlock, yBlock);
+		svg.append('circle')
+		.attr('cx', xBlock)
+		.attr('cy', yBlock)
+		.attr('r', this.dimensions/3)
+		.style('stroke', "red")
+		.style('fill', "transparent")
+		.style('stroke-dasharray', '5,5');
+
 	}
 
 	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
@@ -466,7 +475,7 @@ class Blockchain {
 					}
 
 					g.append('circle')
-						.attr("id",block['id'])
+						.attr("id",'circle'+block['id'])
 						.attr('cx', height*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)

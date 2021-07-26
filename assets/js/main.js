@@ -51,28 +51,36 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 
 d3v7.select('#searchBtnBlock').on('click', () => {
 	if(blockchain.foundBlock){
-		//d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+		
+		//d3.selectAll("#circle"+blockchain.foundBlock).attr('style',  'stroke:transparent;');
 	};
 	console.log("Vecchio blocco: ",blockchain.foundBlock);
 	
 
 	// prendi correttamente la posizione del nodo
 	if(blockchain.chain.blocks[$('#goto-block').val()]){
-		goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false), height/3 - blockchain.chain.blocks[$('#goto-block').val()].render_height);
-		blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id;
+		var xBlock=blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false);
+		var yBlock= height/2 - blockchain.chain.blocks[$('#goto-block').val()].render_height;
+		goToView(xBlock, yBlock);
+
+		blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id
+		//console.log(d3.selectAll("#circle"+blockchain.foundBlock));
+		d3.selectAll("#circle"+blockchain.foundBlock).attr('style',  'stroke:red; fill:red; stroke-dasharray:10');
+		//blockchain.colorSelectedBlock(xBlock, yBlock);
 	}else if($('#goto-block').val()<1){
 		
 		goToView(blockchain.heightPosition(blockchain.chain.positions[0].height, false), height/3);
 		blockchain.foundBlock = 1;
+		
 			
 	}else{
 		
 		goToView(blockchain.heightPosition(blockchain.chain.positions[blockchain.chain.positions.length -1].height, false), height/3);
-		//come gli dico l'ultimo?
-		//blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id;
+		blockchain.foundBlock = Object.keys(blockchain.chain.blocks).length;
 	}
 
-	// metti in rosso il nuovo
+	// metti in evidenza il nuovo
+	//d3.select("#circle"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
 
 	
 	console.log("Nuovo blocco: ",blockchain.foundBlock);
