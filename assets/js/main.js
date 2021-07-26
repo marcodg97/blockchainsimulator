@@ -20,6 +20,9 @@ var forkFertility = 5;
 var blockNumber = 500000;
 
 svg.call(d3v7.zoom().extent([[0, 0], [720, 512]]).scaleExtent([0.15, 1.5]).on('zoom', zoomed));
+svg
+	.on('mousedown', () => svg.attr('style', 'cursor: grabbing; cursor: -webkit-grabbing;'))
+	.on('mouseup', () => svg.attr('style', 'cursor: grab; cursor: -webkit-grab;'));
 
 d3v7.select('#fork-prob-range').on('change', (event) => {forkProbability = event.srcElement.value;});
 d3v7.select('#fork-fertility').on('change', (event) => {forkFertility = event.srcElement.value;});

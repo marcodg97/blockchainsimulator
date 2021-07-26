@@ -491,6 +491,7 @@ class Blockchain {
 						.attr('r', this.dimensions/5)
 						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('stroke', '#0a444d')
+						.style('stroke-width', block.render_height === 0 ? 1:3)
 						.on('click', (event) => {console.log('->',event);})
 						.on('mouseover', (event) => {event.srcElement.style.fill = "#94101d";})
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
