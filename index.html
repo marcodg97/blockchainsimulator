@@ -158,7 +158,7 @@
 	<!-- Main Sidebar Container -->
 	<aside class='main-sidebar sidebar-light-primary elevation-4'>
 		<!-- Brand Logo -->
-		<a href='#' class='brand-link' align='center'>
+		<a class='brand-link' style="align:center;"">
 			<span class='brand-text font-weight-light'>Settings</span>
 		</a>
 
@@ -169,31 +169,14 @@
 			<nav class='mt-2'>
 				<ul class='nav nav-pills nav-sidebar flex-column' data-widget='treeview' role='menu' data-accordion='false'>
 					<!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-					<!--
-					<li class='nav-item'>
-						<a href='#' class='nav-link active'>
-							<i class='nav-icon fas fa-eye'></i>
-							<p>View<i class='right fas fa-angle-left'></i></p>
-						</a>
-						<ul class='nav nav-treeview'>
-							<li class='nav-item'>
-								<div class='nav-link'>
-									<i class='fas fa-level-up-alt'></i>
-									<p>Go to height</p>
-									<div class='slidecontainer'>
-										<input id='goto-height' class='form-control form-control-sm' type='number' id='block-numbers' min='0'>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</li>
-					-->
+					
 					<li class='nav-item'>
 						<a class='nav-link bg-info'>
 							<i class='nav-icon fas fa-cubes'></i>
 							<p>Generator<i class='right fas fa-angle-left'></i></p>
 						</a>
 						<ul class='nav nav-treeview'>
+							
 							<li class='nav-item'>
 								<div class='nav-link'>
 									<i class='fas fa-dice-d6'></i>
@@ -213,18 +196,21 @@
 										</div>
 										<input class='form-control form-control-sm' type='number' min='1' max='100000' value='5000' class='slider' id='fork-prob-range'>
 									</div>
+									
 								</div>
 							</li>
 							<li class='nav-item'>
 								<div class='nav-link'>
 									<i class='fas fa-ellipsis-v'></i>
 									<p>Fork fertility</p>
+								
 									<div class='input-group input-group-sm mb-3'>
 										<div class='input-group-prepend'>
 											<span class='input-group-text'>1 of</span>
 										</div>
 										<input class='form-control form-control-sm' type='number' min='1' max='100000' value='5' class='slider' id='fork-fertility'>
 									</div>
+									
 								</div>
 							</li>
 							<li class='nav-item'>
@@ -232,6 +218,33 @@
 									<i id='generate_icon' class='nav-icon far fa-play-circle' style='color: white;'></i>
 									<p style='color:white;'>Make new blockchain</p>
 								</a>
+								
+							</li>
+							<hr/>
+
+							<li class='nav-item'>
+								<a class='nav-link bg-info'>
+									<i class='nav-icon fas fa-info-circle'></i>
+									<p>More information<i class='right fas fa-angle-left'></i></p>
+								</a>
+								<ul class='nav nav-treeview'>
+							
+									<li class='nav-item'>
+										<div class='nav-link'>
+											<i class='fas fa-project-diagram'></i>
+											<b>Fork probability:</b>
+											<p></br>Probability that a block make two consecutive blocks.</p>
+										</div>
+									</li>
+									<li class='nav-item'>
+										<div class='nav-link'>
+											<i class='fas fa-ellipsis-v'></i>
+											<b>Fork fertility:</b>
+											<p></br>Probability that a forked block make a consecutive block. The probability that a forked blocks make two consecute blocks is the probability of the probability (ex: if fork fertility probability is 1 of 10, then the probability that this block make two consecutive blocks is 1 of 10*10=100).</p>
+										</div>
+									</li>
+								</ul>
+		
 							</li>
 						</ul>
 					</li>
@@ -250,7 +263,7 @@
 			<div class='container-fluid'>
 				<div class='row'>
 					<div class='col-2'>			
-						<div class='info-box'>
+						<div class='info-box' style= "visibility:hidden;" id="GoToHeight">
 							<span class='info-box-icon bg-info elevation-1'><i class="fas fa-arrows-alt-h"></i></span>
 							<div class='info-box-content'>
 								<span class='info-box-text'>Go to height</span>
@@ -264,7 +277,7 @@
 						</div>
 					</div>
 					<div class='col-2'>			
-						<div class='info-box'>
+						<div class='info-box' style= "visibility:hidden;" id="GoToBlock">
 							<span class='info-box-icon bg-info elevation-1'><i class='fas fa-cube'></i></span>
 							<div class='info-box-content'>
 								<span class='info-box-text'>Go to block</span>

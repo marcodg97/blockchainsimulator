@@ -37,13 +37,8 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 			d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
 		}
 	}
-	console.log("Vecchie altezze: ",blockchain.foundHeights);
-
 	// metti in evidenza la nuova o le nuove
-
-	
 	goToView(blockchain.heightPosition($('#goto-height').val()), height/2);
-	console.log("Nuove altezze: ",blockchain.foundHeights);
 
 	d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:red; stroke-dasharray:5,5');
 	if(d3.select("#line"+blockchain.foundHeights[1])){
@@ -99,6 +94,12 @@ function goToView(x,y) {
 }
 
 async function computeAndRender() {
+
+	//visibili i pulsanti di indirizzamento
+	d3.selectAll('#GoToHeight').style("visibility","visible");
+	d3.selectAll('#GoToBlock').style("visibility","visible");
+
+
 	let height = (blockNumber/2) | 0;
 
 	await blockchain.compute(forkProbability, forkFertility, blockNumber);

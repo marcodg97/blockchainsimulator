@@ -26,18 +26,11 @@ class Blockchain {
 
 	heightPosition(height, bFoundHeight=true) {
 
-		console.log(this.chain.positions);
 		for(let i=0; i<this.chain.positions.length; i++){
 			if(this.chain.positions[i].height >= height){
 				if(bFoundHeight){
 					this.colorSelectedHeights(i, height);
-					//return -1*(this.chain.positions[i].position - this.width/2 - (this.chain.positions[i].height == height ? (this.chain.positions[i-1].position - this.chain.positions[i].position)/2 : 0));
-					
 				}
-				console.log(this.chain.positions[i].height," ",height , "" ,this.chain.positions[i].height == height );
-				//return -1*(((this.chain.positions[i].height == height ? this.chain.positions[i-1].position : this.chain.positions[i].position ) - this.width/2));
-				//return -1*((this.chain.positions[i-1].height == height ? this.chain.positions[i+1].position: this.chain.positions[i].position) - this.width/2);
-
 				if(i>0){
 					return -1*(this.chain.positions[i].position - this.width/2 - (this.chain.positions[i].height == height ? (this.chain.positions[i-1].position - this.chain.positions[i].position)/2 : 0));
 				}else return -1*(this.chain.positions[i].position - this.width/2);
