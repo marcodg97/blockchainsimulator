@@ -38,7 +38,7 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 		}
 	}
 	// metti in evidenza la nuova o le nuove
-	goToView(blockchain.heightPosition($('#goto-height').val()), height/2);
+	goToView(blockchain.heightPosition($('#goto-height').val()), height/3);
 
 	if(d3.select("#line"+blockchain.foundHeights[0])){
 		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:red; stroke-dasharray:5,5');
@@ -58,16 +58,16 @@ d3v7.select('#searchBtnBlock').on('click', () => {
 
 	// prendi correttamente la posizione del nodo
 	if(blockchain.chain.blocks[$('#goto-block').val()]){
-		
-		goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false), height/2);
+		goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false), height/3 - blockchain.chain.blocks[$('#goto-block').val()].render_height);
 		blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id;
-
 	}else if($('#goto-block').val()<1){
-		goToView(blockchain.heightPosition(blockchain.chain.positions[0].height, false), height/2);
+		
+		goToView(blockchain.heightPosition(blockchain.chain.positions[0].height, false), height/3);
 		blockchain.foundBlock = 1;
 			
 	}else{
-		goToView(blockchain.heightPosition(blockchain.chain.positions[blockchain.chain.positions.length -1].height, false), height/2);
+		
+		goToView(blockchain.heightPosition(blockchain.chain.positions[blockchain.chain.positions.length -1].height, false), height/3);
 		//come gli dico l'ultimo?
 		//blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id;
 	}

@@ -51,6 +51,7 @@ class Blockchain {
 		
 		return 0;
 	}
+	
 	colorSelectedHeights(index, height) {
 		if(this.chain.positions[index].height == height){
 			this.foundHeights=[];
