@@ -29,11 +29,41 @@ d3v7.select('#fork-fertility').on('change', (event) => {forkFertility = event.sr
 d3v7.select('#block-numbers').on('change', (event) => {blockNumber = event.srcElement.value;});
 
 d3v7.select('#searchBtnHeight').on('click', () => {
+	if(blockchain.foundHeights){
+		// metti in grigio quella/e prima
+		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+
+		if(blockchain.foundHeights[1]){
+			d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+		}
+	}
+	console.log("Vecchie altezze: ",blockchain.foundHeights);
+
+	// metti in evidenza la nuova o le nuove
+
+	
 	goToView(blockchain.heightPosition($('#goto-height').val()), height/2);
+	console.log("Nuove altezze: ",blockchain.foundHeights);
+
+	d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:red; stroke-dasharray:5,5');
+	if(d3.select("#line"+blockchain.foundHeights[1])){
+		d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:red; stroke-dasharray:5,5');
+	}
 });
 
 d3v7.select('#searchBtnBlock').on('click', () => {
-	goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height), height/2);
+	if(blockchain.foundBlock){
+		//d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+	};
+	console.log("Vecchio blocco: ",blockchain.foundBlock);
+
+
+	// metti in rosso il nuovo
+
+
+	goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false), height/2);
+	blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id;
+	console.log("Nuovo blocco: ",blockchain.foundBlock);
 })
 
 /************************************************************************************************************************************************/

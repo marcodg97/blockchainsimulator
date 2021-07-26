@@ -24,12 +24,43 @@ class Blockchain {
 		this.forks = [];
 	}
 
-	heightPosition(height) {
-		for(let i=0; i<this.chain.positions.length; i++)
-			if(this.chain.positions[i].height >= height)
-				return -1*(this.chain.positions[i].position - (this.chain.positions[i].height === height ? 0 : this.width/2));
+	heightPosition(height, bFoundHeight=true) {
 
+		console.log(this.chain.positions);
+		for(let i=0; i<this.chain.positions.length; i++){
+			if(this.chain.positions[i].height >= height){
+				if(bFoundHeight){
+					this.colorSelectedHeights(i, height);
+					//return -1*(this.chain.positions[i].position - this.width/2 - (this.chain.positions[i].height == height ? (this.chain.positions[i-1].position - this.chain.positions[i].position)/2 : 0));
+					
+				}
+				console.log(this.chain.positions[i].height," ",height , "" ,this.chain.positions[i].height == height );
+				//return -1*(((this.chain.positions[i].height == height ? this.chain.positions[i-1].position : this.chain.positions[i].position ) - this.width/2));
+				//return -1*((this.chain.positions[i-1].height == height ? this.chain.positions[i+1].position: this.chain.positions[i].position) - this.width/2);
+
+				if(i>0){
+					return -1*(this.chain.positions[i].position - this.width/2 - (this.chain.positions[i].height == height ? (this.chain.positions[i-1].position - this.chain.positions[i].position)/2 : 0));
+				}else return -1*(this.chain.positions[i].position - this.width/2);
+
+			}
+			if(height>this.chain.positions[this.chain.positions.length -1].height){
+				return -1*(this.chain.positions[this.chain.positions.length -1].position - this.width/2);
+			}
+			
+
+		}
+		
 		return 0;
+	}
+	colorSelectedHeights(index, height) {
+		if(this.chain.positions[index].height == height){
+			this.foundHeights=[];
+			this.foundHeights[0] = height;
+			
+		}else{
+			index<1 ? this.foundHeights[0] = 0 : this.foundHeights[0] = this.chain.positions[index-1].height;
+			height>this.chain.positions[this.chain.positions.length -1].height ? this.foundHeights[1] = 0 : this.foundHeights[1] = this.chain.positions[index].height;
+		}
 	}
 
 	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
@@ -375,6 +406,7 @@ class Blockchain {
 				let distance_factor = (this.chain.heights[j+1] == undefined || this.chain.heights[j+1].length < 9 ? 1:(this.chain.heights[j+1].length/8));
 
 				g.append('line')
+					.attr('id', 'line'+j)
 					.attr('x1', (height*this.dimensions))
 					.attr('y1', -3*this.width)
 					.attr('x2', (height*this.dimensions))
