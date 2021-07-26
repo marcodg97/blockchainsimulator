@@ -21,6 +21,14 @@ svg {
 	border-bottom-right-radius: 0.25em;
 }
 
+.input-group{
+	padding: .1rem !important
+}
+
+.form-control{
+	padding: .1rem !important
+}
+
 .legend {
 	margin: auto !important;
 }
