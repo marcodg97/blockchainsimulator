@@ -1,10 +1,7 @@
 # Blockchain Simulator
 Progetto per il corso di visualizzazione delle informazioni 2020/2021:
 
-## Authors
-Marco De Giovanni 
-Alice Di Carlo
-Andrea Giaccone
+
 
 
 L'interfaccia ha come finalità l'intento di simulare il comportamento di una (o più) blockchain e mostrarla a video.
@@ -36,3 +33,9 @@ Per distinguere le diverse densità dei cluster generati si è scelto di identif
 
 
 Tra gli elementi aggiuntivi vi è una pre-view semplice al momento dell'apertura della pagina che identifica gli elementi fondamentali da sapere per la lettura del grafo e delle piccole descrizioni sulle variabili di probabilità selezionando il pulsante "more information".
+
+
+## Autori
+Marco De Giovanni 
+Alice Di Carlo
+Andrea Giaccone
