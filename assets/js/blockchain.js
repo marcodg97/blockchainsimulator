@@ -411,7 +411,7 @@ class Blockchain {
 			if(this.chain.heights.length === 1) {
 				g.append('circle')
 					.attr('style', 'cursor:default')
-					.attr('id', 'circle'+block["id"])
+					.attr('id', 'circle'+0)
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/5)
