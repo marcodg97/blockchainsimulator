@@ -36,6 +36,8 @@ class Blockchain {
 
 
 		this.forks = [];
+		this.foundBlock = null;
+		this.foundHeights = [];
 	}
 
 	heightPosition(height, bFoundHeight=true) {

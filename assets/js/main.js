@@ -29,6 +29,7 @@ d3v7.select('#fork-fertility').on('change', (event) => {forkFertility = event.sr
 d3v7.select('#block-numbers').on('change', (event) => {blockNumber = event.srcElement.value;});
 
 d3v7.select('#searchBtnHeight').on('click', () => {
+
 	if(blockchain.foundHeights){
 		// metti in grigio quella/e prima
 		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
@@ -56,13 +57,14 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 d3v7.select('#searchBtnBlock').on('click', () => {
 
 	//console.log("Vecchio blocco: ",blockchain.foundBlock);
+
 	//cancella quella prima
 	if(blockchain.foundBlock){
 		var color= d3.selectAll(blockchain.foundBlock).attr("color");
 		d3.selectAll(blockchain.foundBlock).attr('style',  'stroke:#0a444d; fill:'+color+';');
 	};
+
 	// prendi correttamente la posizione del nodo
-	
 	if(blockchain.chain.blocks[$('#goto-block').val()]){
 		
 		var xBlock=blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false);
@@ -70,7 +72,7 @@ d3v7.select('#searchBtnBlock').on('click', () => {
 		goToView(xBlock, yBlock);
 
 		var blockHeight = blockchain.blockPosition(blockchain.chain.blocks[$('#goto-block').val()].height);
-		//console.log(blockHeight);
+		
 		if(blockchain.chain.blocks[$('#goto-block').val()].height == blockHeight){
 			// se è un nodo singolo
 			
