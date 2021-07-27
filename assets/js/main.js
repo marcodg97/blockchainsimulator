@@ -32,20 +32,24 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 	if(blockchain.foundHeights){
 		// metti in grigio quella/e prima
 		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+		d3.select("#text"+blockchain.foundHeights[0]).attr('style',  'fill:#aaa');
 
 		if(blockchain.foundHeights[1]){
 			d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+			d3.select("#text"+blockchain.foundHeights[1]).attr('style',  'fill:#aaa');
 		}
 	}
 	// metti in evidenza la nuova o le nuove
 	goToView(blockchain.heightPosition($('#goto-height').val()), height/3);
 
 	if(d3.select("#line"+blockchain.foundHeights[0])){
-		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:#94101d; stroke-dasharray:5,5');
+		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:#f00; stroke-dasharray:10,10');
+		d3.select("#text"+blockchain.foundHeights[0]).attr('style',  'fill:#f00');
 	}
 	
 	if(d3.select("#line"+blockchain.foundHeights[1])){
-		d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#94101d; stroke-dasharray:5,5');
+		d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#f00; stroke-dasharray:10,10');
+		d3.select("#text"+blockchain.foundHeights[1]).attr('style',  'fill:#f00');
 	}
 });
 

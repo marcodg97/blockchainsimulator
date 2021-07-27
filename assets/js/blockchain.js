@@ -443,6 +443,7 @@ class Blockchain {
 					.attr('y2', 3*this.width)
 					.attr('style', 'stroke:#aaa; stroke-dasharray:5,5')
 				g.append('text')
+					.attr('id', 'text'+j)
 					.attr('x', (height*this.dimensions)+10)
 					.attr('y', -1.5*this.dimensions)
 					.html(j)

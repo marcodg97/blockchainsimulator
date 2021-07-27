@@ -49,7 +49,7 @@ class Graph {
 		});
 
 		this.chart.data.colors({
-			'Difficulty' : 'red',
+			'Difficulty' : 'rgb(255, 127, 14)',
 			'Concurrent chain' : 'blue'
 		});
 	}
