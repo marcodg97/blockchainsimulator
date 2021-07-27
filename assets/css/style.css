@@ -13,6 +13,10 @@ svg {
 	padding: 0 !important;
 }
 
+.control-sidebar {
+	height: calc(100vh - 57px);
+}
+
 .info-box {
 	max-height: 80px;
 	border-top-left-radius: 0;
