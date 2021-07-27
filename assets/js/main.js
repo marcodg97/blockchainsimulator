@@ -128,16 +128,50 @@ let lastTranslate = 0;
 let lastPositionK = 0;
 let lastPositionX = 0;
 let lastPositionY = 0;
+
+//----------qui ho aggiunto maxX e maxY per capire quale punto massimo/minimo di x e y servisse avere come limite
+let maxX = blockchain.maxRenderX;
+let maxY = blockchain.maxRenderY;
+let oldPk = 1
+let oldPx = 0
+let oldPy = 0
+//------------------------------qui sotto è come prima-----------------------------
+
 function zoomed({transform}) {
+
+//---------------------------------------------------------------------
+	oldPk = position.k	
+	oldPx = position.x
+	oldPy = position.y
+//---------------------------------------------------------------------
+
 	position.x += (transform.x - lastTransform.x);
 	position.y += (transform.y - lastTransform.y);	
 	position.k += (transform.k - lastTransform.k);
 	lastTransform = transform; 	
 
-	if(position.y < 0)
-		position.y = 0;
-	else if(position.y > viewBound)
-		position.y = viewBound;
+// qui la vera schifezza: con il fatto che all'inizio è zero e che si deve aggiornare ad ogni computazione dell'algoritmo lo riassegno continuamente
+	maxY = blockchain.maxRenderY;
+	if(position.y < -maxY+50)
+		position.y = -maxY+50;
+	else if(position.y > viewBound+maxY-50)
+		position.y = viewBound+maxY-50;
+
+	maxX = blockchain.maxRenderX
+	if(position.x < -maxX+120){
+		position.x = -maxX+120;
+	}
+
+//----------questo è innocente, perché il primo blocco è sempre in (0,0) 
+	if(position.x > width-360)
+		position.x = width-360;
+
+//---------qui risolvo lo zoom, se k cambia, non cambiano x e y --------
+	if (position.k != oldPk){
+		position.x = oldPx;
+		position.y = oldPy;
+	}
+//----------------------------------------------------------------------
 
 	g.attr('transform', 'translate('+position.x+','+position.y+') scale('+position.k+')');
 }

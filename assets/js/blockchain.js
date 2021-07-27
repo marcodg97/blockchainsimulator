@@ -14,6 +14,12 @@ class Blockchain {
 		this.width = width;
 		this.foundBlock = null;
 		this.foundHeights = [];
+
+//------------------Variabili globali perché le richiamo nel main--------------------
+		this.maxRenderX = 0;
+		this.maxRenderY = 0;
+//-----------------------------------------------------------------------------------
+
 	}
 
 	clear() {
@@ -22,6 +28,12 @@ class Blockchain {
 			'blocks':{},
 			'positions':[]
 		};
+
+//------------------azzero dopo un compute-------------------------------------------
+		this.maxRenderX = 0;
+		this.maxRenderY = 0;
+//-----------------------------------------------------------------------------------
+
 
 		this.forks = [];
 	}
@@ -191,6 +203,12 @@ class Blockchain {
 
 		for(let i=0; i<this.chain.heights.length; i++) {
 
+//----------------------------------qui trovo il numero massimo di blocchi per altezza-----------
+			if (this.maxRenderY < this.chain.heights[i].length)
+				this.maxRenderY = this.chain.heights[i].length
+//-----------------------------------------------------------------------------------------------
+
+
 			let blockHeights = [];
 			for(let j=0; j<this.chain.heights[i].length; j++) {
 				let block = this['chain']['blocks'][this.chain.heights[i][j]];
@@ -222,6 +240,10 @@ class Blockchain {
 
 			}
 		}
+
+//---------------------------------------qui calcolo di quanto effettivamente mi devo allontanare da y = 0-----
+		this.maxRenderY = (Math.floor(this.maxRenderY/2))*120;
+//--------------------------------------------------------------------------------------------------------------
 
 		return this.chain;
 	}
@@ -342,6 +364,7 @@ class Blockchain {
 
 			if((compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id) === 1) {
 				g.append('circle')
+					.attr('style', 'cursor:default')
 					.attr('id', 'circle1')
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
@@ -350,6 +373,7 @@ class Blockchain {
 					.style('fill', '#17a2b8')
 					.style('stroke', '#0a444d');
 				g.append('text')
+					.attr('style', 'cursor:default')
 					.attr('x', height*this.dimensions)
 					.attr('y', height*this.dimensions)
 					.attr('text-anchor', 'middle')
@@ -361,6 +385,7 @@ class Blockchain {
 				let blockText = '[#1-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']';
 				let clusterId= 0;
 				g.append('circle')
+					.attr('style', 'cursor:default')
 					.attr("id", "circle"+clusterId+"cluster")
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
@@ -372,6 +397,7 @@ class Blockchain {
 					.style('fill', clusterLengthScale(compactChain[0].from))
 					.style('stroke', '#0a444d');
 				g.append('text')
+					.attr('style', 'cursor:default')
 					.attr('x', height*this.dimensions)
 					.attr('y', height*this.dimensions)
 					.attr('text-anchor', 'middle')
@@ -384,6 +410,7 @@ class Blockchain {
 		} else {
 			if(this.chain.heights.length === 1) {
 				g.append('circle')
+					.attr('style', 'cursor:default')
 					.attr('id', 'circle'+block["id"])
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
@@ -392,6 +419,7 @@ class Blockchain {
 					.style('fill', '#042024')
 					.style('stroke', '#0a444d');
 				g.append('text')
+					.attr('style', 'cursor:default')
 					.attr('x', height*this.dimensions)
 					.attr('y', height*this.dimensions)
 					.attr('text-anchor', 'middle')
@@ -402,7 +430,8 @@ class Blockchain {
 			} else {
 				let blockText = '[#1-#'+(this.chain.heights.length)+']';
 				let clusterId = 0;
-					g.append('circle')
+				g.append('circle')
+					.attr('style', 'cursor:default')
 					.attr("id", "circle"+clusterId+"cluster")
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
@@ -412,6 +441,7 @@ class Blockchain {
 					.on('click', () => {this.showClusterBlockDetails(1, this.chain.heights.length)})
 					.style('stroke', '#0a444d');
 				g.append('text')
+					.attr('style', 'cursor:default')
 					.attr('x', height*this.dimensions)
 					.attr('y', height*this.dimensions)
 					.attr('text-anchor', 'middle')
@@ -489,7 +519,8 @@ class Blockchain {
 					}
 
 					g.append('circle')
-						.attr("id",'circle'+block['id'])
+						.attr('style', 'cursor:default')
+						.attr('id','circle'+block['id'])
 						.attr('cx', height*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
@@ -501,6 +532,7 @@ class Blockchain {
 						.on('mouseout', () => {event.srcElement.style.fill = (block.render_height === 0 ? '#17a2b8' : '#5747d1')});
 
 					g.append('text')
+						.attr('style', 'cursor:default')
 						.attr('x', height*this.dimensions)
 						.attr('y', block.render_height)
 						.attr('text-anchor', 'middle')
@@ -509,6 +541,11 @@ class Blockchain {
 						.attr('font-size', fontSizeScale(blockText.length))
 						.html(blockText)
 				}
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+				if (this.maxRenderX < height*this.dimensions)
+					this.maxRenderX = height*this.dimensions;
+//--------------------------------------------------------------------------------------------------------------------------------------
 
 				height += distance_factor;
 			}
@@ -534,6 +571,7 @@ class Blockchain {
 					let blockText = '#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id);
 
 					g.append('circle')
+						.attr('style', 'cursor:default')
 						.attr('id', 'circle'+block["id"])
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
@@ -547,6 +585,7 @@ class Blockchain {
 						.on('mouseout', (event) => {event.srcElement.style.fill = "#17a2b8";})
 
 					g.append('text')
+						.attr('style', 'cursor:default')
 						.attr('x', height*this.dimensions)
 						.attr('y', 0)
 						.attr('text-anchor', 'middle')
@@ -559,6 +598,7 @@ class Blockchain {
 					let clusterId = blockchain.chain.positions.length;
 	
 					g.append('circle')
+						.attr('style', 'cursor:default')
 						.attr("id", "circle"+clusterId+"cluster")
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
@@ -570,6 +610,7 @@ class Blockchain {
 						.style('fill', clusterLengthScale(compactChain[i+1].from-1 - compactChain[i].to+1))
 						.style('stroke', '#0a444d');
 					g.append('text')
+						.attr('style', 'cursor:default')
 						.attr('x', height*this.dimensions)
 						.attr('y', 0)
 						.attr('text-anchor', 'middle')
@@ -583,6 +624,7 @@ class Blockchain {
 				let clusterId = blockchain.chain.positions.length;
 				
 				g.append('circle')
+					.attr('style', 'cursor:default')
 					.attr("id", "circle"+clusterId+"cluster")
 					.attr('cx', height*this.dimensions)
 					.attr('cy', 0)
@@ -594,6 +636,7 @@ class Blockchain {
 					.style('fill', clusterLengthScale(this.chain.heights.length-1 - compactChain[i].to+1))
 					.style('stroke', '#0a444d');
 				g.append('text')
+					.attr('style', 'cursor:default')
 					.attr('x', height*this.dimensions)
 					.attr('y', 0)
 					.attr('text-anchor', 'middle')
@@ -601,6 +644,12 @@ class Blockchain {
 					.attr('font-size', clusterFontSizeScale(blockText.length))
 					.attr('fill', 'white')
 					.html(blockText);
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+				if (this.maxRenderX < height*this.dimensions)
+					this.maxRenderX = height*this.dimensions;
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 			}
 
 			height ++;
