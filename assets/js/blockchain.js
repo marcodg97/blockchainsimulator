@@ -287,7 +287,7 @@ class Blockchain {
 			svg.html('');
 
 		let compactChain = [];
-		let maxClusterLenght = 1;
+		let maxClusterLenght = 4;
 
 		let from = 0;
 		let collecting = false;
@@ -326,7 +326,11 @@ class Blockchain {
 		/*********************************************************************/
 
 		let shortClusterLenght = Math.floor((maxClusterLenght/3)-1);
+		if (shortClusterLenght < 3)
+			shortClusterLenght = 3
 		let mediumClusterLength = Math.floor((2*maxClusterLenght/3)-1);
+		if (mediumClusterLength < 4)
+			mediumClusterLength = 4
 
 		let clusterLengthScale = function(length) {
 			if(length < shortClusterLenght)
@@ -417,8 +421,12 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/5)
-					.attr('color', '#042024')
-					.style('fill', '#042024')
+//-------------------------------------------------------------------------------------------------
+					.attr('color', '#17a2b8')
+					.style('fill', '#17a2b8')
+//------------------------------------------------------------------------------------------------
+//					.attr('color', '#042024')
+//					.style('fill', '#042024')
 					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('style', 'cursor:default')
@@ -438,8 +446,12 @@ class Blockchain {
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/2)
-					.attr('color', '#042024')
-					.style('fill', '#042024')
+//------------------------------------------------------------------------------------------------
+					.attr('color', clusterLengthScale(this.chain.heights.length))
+					.style('fill', clusterLengthScale(this.chain.heights.length))
+//------------------------------------------------------------------------------------------------
+//					.attr('color', '#042024')
+//					.style('fill', '#042024')
 					.on('click', () => {this.showClusterBlockDetails(1, this.chain.heights.length)})
 					.style('stroke', '#0a444d');
 				g.append('text')
