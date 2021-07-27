@@ -424,6 +424,9 @@ class Blockchain {
 //-------------------------------------------------------------------------------------------------
 					.attr('color', '#17a2b8')
 					.style('fill', '#17a2b8')
+					.on('click', () => { this.showBlockDetails(this.chain.blocks[1]); })
+					.on('mouseover', () => {event.srcElement.style.fill = '#94101d'})
+					.on('mouseout', () => {event.srcElement.style.fill = '#17a2b8'})
 //------------------------------------------------------------------------------------------------
 //					.attr('color', '#042024')
 //					.style('fill', '#042024')
@@ -449,10 +452,12 @@ class Blockchain {
 //------------------------------------------------------------------------------------------------
 					.attr('color', clusterLengthScale(this.chain.heights.length))
 					.style('fill', clusterLengthScale(this.chain.heights.length))
+					.on('click', () => {this.showClusterBlockDetails(1, this.chain.heights.length)})
+					.on('mouseover', () => {event.srcElement.style.fill = '#94101d'})
+					.on('mouseout', () => {event.srcElement.style.fill = clusterLengthScale(this.chain.heights.length)})
 //------------------------------------------------------------------------------------------------
 //					.attr('color', '#042024')
 //					.style('fill', '#042024')
-					.on('click', () => {this.showClusterBlockDetails(1, this.chain.heights.length)})
 					.style('stroke', '#0a444d');
 				g.append('text')
 					.attr('style', 'cursor:default')
