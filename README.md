@@ -5,7 +5,7 @@ Progetto per il corso di visualizzazione delle informazioni 2020/2021:
 
 
 L'interfaccia ha come finalità l'intento di simulare il comportamento di una (o più) blockchain e mostrarla a video.
-Obbiettivo della simulazione era al variare di alcuni fattori riprodurre una concatenzazione che si avvicinasse alla struttura di una crypto-valuta costruita in blockchain.
+Obbiettivo della simulazione è che al variare di alcuni fattori sia possibile riprodurre una concatenzazione che si avvicini alla struttura di una crypto-valuta costruita in blockchain.
 
 Le tre variabili fondamentali permettono all'applicativo di generare una concatenazione sempre nuova in base 
 
