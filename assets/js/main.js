@@ -171,6 +171,11 @@ function zoomed({transform}) {
 		position.x = oldPx;
 		position.y = oldPy;
 	}
+
+	if (position.k < 0.15)
+		position.k = 0.15
+	if (position.k > 1.5)
+		position.k = 1.5
 //----------------------------------------------------------------------
 
 	g.attr('transform', 'translate('+position.x+','+position.y+') scale('+position.k+')');
