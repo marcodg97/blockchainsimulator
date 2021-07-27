@@ -32,7 +32,7 @@ Per distinguere le diverse densità dei cluster generati si è scelto di identif
 
 
 
-Tra gli elementi aggiuntivi vi è una pre-view semplice al momento dell'apertura della pagina che identifica gli elementi fondamentali da sapere per la lettura del grafo e delle piccole descrizioni sulle variabili di probabilità selezionando il pulsante "more information".
+Tra gli elementi aggiuntivi vi è una pre-view semplice al momento dell'apertura della pagina che identifica gli elementi fondamentali da sapere per la lettura del grafo e delle piccole descrizioni sulle variabili di probabilità selezionando il pulsante con l'icona delle info.
 
 
 ## Autori
