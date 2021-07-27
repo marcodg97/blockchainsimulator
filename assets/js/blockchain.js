@@ -48,6 +48,21 @@ class Blockchain {
 		
 		return 0;
 	}
+	blockPosition(height) {
+
+		for(let i=0; i<this.chain.positions.length; i++){
+			if(this.chain.positions[i].height >= height){
+
+				if(this.chain.positions[i].height == height){
+					return height;
+				}
+				return this.chain.positions[i].height;
+
+			}
+		}
+		
+		return 0;
+	}
 	
 	colorSelectedHeights(index, height) {
 		if(this.chain.positions[index].height == height){
@@ -67,6 +82,7 @@ class Blockchain {
 			}
 		}
 	}
+	/*
 	colorSelectedBlock(xBlock, yBlock) {
 
 		console.log(xBlock, yBlock);
@@ -79,7 +95,7 @@ class Blockchain {
 		.style('stroke-dasharray', '5,5');
 
 	}
-
+*/
 	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
 		let h = 0;
 		let value = blocksNumber*valueFactor;
@@ -339,9 +355,11 @@ class Blockchain {
 
 			if((compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id) === 1) {
 				g.append('circle')
+					.attr('id', 'circle'+block["id"])
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/5)
+					.attr('color', '#17a2b8')
 					.style('fill', '#17a2b8')
 					.style('stroke', '#0a444d');
 				g.append('text')
@@ -354,13 +372,16 @@ class Blockchain {
 					.html('#1');
 			} else {
 				let blockText = '[#1-#'+(compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id)+']';
+				let clusterId= 0;
 				g.append('circle')
+					.attr("id", "circle"+clusterId+"cluster")
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/2)
 					.on('click', () => {this.showClusterBlockDetails(1, compactChain[0].from)})
 					.on('mouseover', () => {event.srcElement.style.fill = '#94101d'})
 					.on('mouseout', () => {event.srcElement.style.fill = clusterLengthScale(compactChain[0].from)})
+					.attr('color', clusterLengthScale(compactChain[0].from))
 					.style('fill', clusterLengthScale(compactChain[0].from))
 					.style('stroke', '#0a444d');
 				g.append('text')
@@ -376,9 +397,11 @@ class Blockchain {
 		} else {
 			if(this.chain.heights.length === 1) {
 				g.append('circle')
+					.attr('id', 'circle'+block["id"])
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/5)
+					.attr('color', '#042024')
 					.style('fill', '#042024')
 					.style('stroke', '#0a444d');
 				g.append('text')
@@ -391,10 +414,13 @@ class Blockchain {
 					.html('#1');
 			} else {
 				let blockText = '[#1-#'+(this.chain.heights.length)+']';
-				g.append('circle')
+				let clusterId = 0;
+					g.append('circle')
+					.attr("id", "circle"+clusterId+"cluster")
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/2)
+					.attr('color', '#042024')
 					.style('fill', '#042024')
 					.on('click', () => {this.showClusterBlockDetails(1, this.chain.heights.length)})
 					.style('stroke', '#0a444d');
@@ -479,6 +505,7 @@ class Blockchain {
 						.attr('cx', height*this.dimensions)
 						.attr('cy', block.render_height)
 						.attr('r', this.dimensions/5)
+						.attr('color', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('stroke', '#0a444d')
 						.on('click', () => { this.showBlockDetails(block); })
@@ -519,9 +546,11 @@ class Blockchain {
 					let blockText = '#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id);
 
 					g.append('circle')
+						.attr('id', 'circle'+block["id"])
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
 						.attr('r', this.dimensions/5)
+						.attr('color', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('fill', block.render_height === 0 ? '#17a2b8' : '#5747d1')
 						.style('stroke', '#0a444d')
 						.style('stroke-width', block.render_height === 0 ? 1:3)
@@ -539,14 +568,19 @@ class Blockchain {
 						.html(blockText)
 				} else {
 					let blockText = '[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id)+']';
+					let clusterId = blockchain.chain.positions.length;
 
+					//console.log("prova1 clusterId: ", clusterId);
+	
 					g.append('circle')
+						.attr("id", "circle"+clusterId+"cluster")
 						.attr('cx', height*this.dimensions)
 						.attr('cy', 0)
 						.attr('r', this.dimensions/2)
 						.on('click', () => {this.showClusterBlockDetails((this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id), (this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id))})
 						.on('mouseover', () => {event.srcElement.style.fill = '#94101d'})
 						.on('mouseout', () => {event.srcElement.style.fill = clusterLengthScale(compactChain[i+1].from-1 - compactChain[i].to+1)})
+						.attr('color', clusterLengthScale(compactChain[i+1].from-1 - compactChain[i].to+1))
 						.style('fill', clusterLengthScale(compactChain[i+1].from-1 - compactChain[i].to+1))
 						.style('stroke', '#0a444d');
 					g.append('text')
@@ -560,14 +594,17 @@ class Blockchain {
 				}
 			} else {
 				let blockText = '[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[this.chain.heights.length-1][0]].id)+']';
-
+				let clusterId = blockchain.chain.positions.length;
+				
 				g.append('circle')
+					.attr("id", "circle"+clusterId+"cluster")
 					.attr('cx', height*this.dimensions)
 					.attr('cy', 0)
 					.attr('r', this.dimensions/2)
 					.on('click', () => {this.showClusterBlockDetails((this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id), (this.chain.blocks[this.chain.heights[this.chain.heights.length-1][0]].id))})
 					.on('mouseover', () => {event.srcElement.style.fill = '#94101d'})
 					.on('mouseout', () => {event.srcElement.style.fill = clusterLengthScale(this.chain.heights.length-1 - compactChain[i].to+1)})
+					.attr('color', clusterLengthScale(this.chain.heights.length-1 - compactChain[i].to+1))
 					.style('fill', clusterLengthScale(this.chain.heights.length-1 - compactChain[i].to+1))
 					.style('stroke', '#0a444d');
 				g.append('text')
