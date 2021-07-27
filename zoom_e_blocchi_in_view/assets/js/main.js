@@ -38,27 +38,76 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 		}
 	}
 	// metti in evidenza la nuova o le nuove
-	goToView(blockchain.heightPosition($('#goto-height').val()), height/2);
+	goToView(blockchain.heightPosition($('#goto-height').val()), height/3);
 
-	d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:red; stroke-dasharray:5,5');
+	if(d3.select("#line"+blockchain.foundHeights[0])){
+		d3.select("#line"+blockchain.foundHeights[0]).attr('style',  'stroke:#94101d; stroke-dasharray:5,5');
+	}
+	
 	if(d3.select("#line"+blockchain.foundHeights[1])){
-		d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:red; stroke-dasharray:5,5');
+		d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#94101d; stroke-dasharray:5,5');
 	}
 });
 
 d3v7.select('#searchBtnBlock').on('click', () => {
+
+	//console.log("Vecchio blocco: ",blockchain.foundBlock);
+	//cancella quella prima
 	if(blockchain.foundBlock){
-		//d3.select("#line"+blockchain.foundHeights[1]).attr('style',  'stroke:#aaa; stroke-dasharray:5,5');
+		var color= d3.selectAll(blockchain.foundBlock).attr("color");
+		d3.selectAll(blockchain.foundBlock).attr('style',  'stroke:#0a444d; fill:'+color+';');
 	};
-	console.log("Vecchio blocco: ",blockchain.foundBlock);
+	// prendi correttamente la posizione del nodo
+	
+	if(blockchain.chain.blocks[$('#goto-block').val()]){
+		
+		var xBlock=blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false);
+		var yBlock= height/3 - blockchain.chain.blocks[$('#goto-block').val()].render_height;
+		goToView(xBlock, yBlock);
+
+		var blockHeight = blockchain.blockPosition(blockchain.chain.blocks[$('#goto-block').val()].height);
+		//console.log(blockHeight);
+		if(blockchain.chain.blocks[$('#goto-block').val()].height == blockHeight){
+			// se è un nodo singolo
+			
+			if($('#goto-block').val()==Object.keys(blockchain.chain.blocks).length){
+
+				blockchain.foundBlock = "#circle"+Object.keys(blockchain.chain.blocks).length;
+			}else{
+				blockchain.foundBlock = "#circle"+blockchain.chain.blocks[$('#goto-block').val()].id;
+			}
+
+		}else{
+			// se è un cluster
+			
+			if($('#goto-block').val()==Object.keys(blockchain.chain.blocks).length){
+
+				blockchain.foundBlock = "#circle"+Object.keys(blockchain.chain.positions).length+"cluster";
+			}else{
+				blockchain.foundBlock = "#circle"+blockchain.chain.positions.map(function(o) { return o.height; }).indexOf(blockHeight)+"cluster";
+
+			}
+			
+			//console.log(d3.selectAll("#circle"+Object.keys(blockchain.chain.blocks).length+"cluster"));
+		}
+
+		d3.selectAll(blockchain.foundBlock).attr('style',  'stroke:#94101d; stroke-width="2%"; fill:#94101d; stroke-dasharray:10');
 
 
-	// metti in rosso il nuovo
 
-
-	goToView(blockchain.heightPosition(blockchain.chain.blocks[$('#goto-block').val()].height, false), height/2);
-	blockchain.foundBlock = blockchain.chain.blocks[$('#goto-block').val()].id;
-	console.log("Nuovo blocco: ",blockchain.foundBlock);
+	// se l'utente sceglie un valore negativo o nullo
+	}else if($('#goto-block').val()<1){
+		// vai all'inizio
+		goToView(blockchain.heightPosition(blockchain.chain.positions[0].height, false), height/3);
+		blockchain.foundBlock = null;
+		
+			
+	}else {
+		//vai alla fine
+		goToView(blockchain.heightPosition(blockchain.chain.positions[blockchain.chain.positions.length -1].height, false), height/3);
+		blockchain.foundBlock = null;
+	}
+	//console.log("Nuovo blocco: ",blockchain.foundBlock);
 })
 
 /************************************************************************************************************************************************/

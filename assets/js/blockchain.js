@@ -82,20 +82,7 @@ class Blockchain {
 			}
 		}
 	}
-	/*
-	colorSelectedBlock(xBlock, yBlock) {
 
-		console.log(xBlock, yBlock);
-		svg.append('circle')
-		.attr('cx', xBlock)
-		.attr('cy', yBlock)
-		.attr('r', this.dimensions/3)
-		.style('stroke', "red")
-		.style('fill', "transparent")
-		.style('stroke-dasharray', '5,5');
-
-	}
-*/
 	compute(probability, forkFertility, blocksNumber, valueFactor = 20) {
 		let h = 0;
 		let value = blocksNumber*valueFactor;
@@ -569,8 +556,6 @@ class Blockchain {
 				} else {
 					let blockText = '[#'+(this.chain.blocks[this.chain.heights[compactChain[i].to+1][0]].id)+'-#'+(this.chain.blocks[this.chain.heights[compactChain[i+1].from-1][0]].id)+']';
 					let clusterId = blockchain.chain.positions.length;
-
-					//console.log("prova1 clusterId: ", clusterId);
 	
 					g.append('circle')
 						.attr("id", "circle"+clusterId+"cluster")

@@ -51,17 +51,12 @@ d3v7.select('#searchBtnHeight').on('click', () => {
 
 d3v7.select('#searchBtnBlock').on('click', () => {
 
-	console.log("Vecchio blocco: ",blockchain.foundBlock);
-	
-
+	//console.log("Vecchio blocco: ",blockchain.foundBlock);
 	//cancella quella prima
 	if(blockchain.foundBlock){
 		var color= d3.selectAll(blockchain.foundBlock).attr("color");
 		d3.selectAll(blockchain.foundBlock).attr('style',  'stroke:#0a444d; fill:'+color+';');
 	};
-	
-	
-
 	// prendi correttamente la posizione del nodo
 	
 	if(blockchain.chain.blocks[$('#goto-block').val()]){
@@ -71,7 +66,7 @@ d3v7.select('#searchBtnBlock').on('click', () => {
 		goToView(xBlock, yBlock);
 
 		var blockHeight = blockchain.blockPosition(blockchain.chain.blocks[$('#goto-block').val()].height);
-		console.log(blockHeight);
+		//console.log(blockHeight);
 		if(blockchain.chain.blocks[$('#goto-block').val()].height == blockHeight){
 			// se è un nodo singolo
 			
@@ -116,7 +111,7 @@ d3v7.select('#searchBtnBlock').on('click', () => {
 	}
 
 	
-	console.log("Nuovo blocco: ",blockchain.foundBlock);
+	//console.log("Nuovo blocco: ",blockchain.foundBlock);
 })
 
 /************************************************************************************************************************************************/
