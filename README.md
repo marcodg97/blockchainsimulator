@@ -22,7 +22,7 @@ Durante la navigazione è possibile:
 - avere una visione d'insieme della frequenza di biforcazione dell'albero
 
 
-È stato inoltre di nostro interesse trovare una soluzione più compatta e manegevole per l'utente nel visualizzare l'intero albero generato che altrimenti avrebbe avuto una visione ripetitiva e di scarso interesse. 
+È stato inoltre di nostro interesse trovare una soluzione più compatta e maneggevole per l'utente nel visualizzare l'intero albero generato che altrimenti avrebbe avuto una visione ripetitiva e di scarso interesse. 
 ![alt text](/images/graph.png)
 Qualora ci fossero due o più nodi in sequenza ma senza biforcazioni, questi vengono raggruppati in un gruppo di nodi. 
 Ciò permette più facilmente d'identificare nodi orfani ed avere una visione complessiva di tutto l'albero senza però doverlo scorrerlo nodo per nodo.
