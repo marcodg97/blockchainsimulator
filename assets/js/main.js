@@ -146,12 +146,35 @@ function goToView(x,y) {
 	g.attr('transform','translate('+x+','+y+') scale(1)');
 }
 
-async function computeAndRender() {
+function checkIfCompute() {
+	if(blockNumber/forkProbability > 5000) {
+		console.log(blockNumber/forkProbability);
+
+		//Show alert dialog
+		Swal.fire({
+			title: 'Too many forks!',
+			text: 'The blockchain will have a very high number of forks shown, this could slow down or crash your browser, do you want to proceed anyway?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: `Proceed anyway`,
+			confirmButtonColor: '#d33',
+			cancelButtonColor: '#17a2b8'
+		}).then((result) => {
+			if(result.isConfirmed)
+				computeAndRender(true);
+			else
+				return;
+		});
+	} else {
+		computeAndRender();
+	}
+}
+
+async function computeAndRender(computeAnyway = false) {
 
 	//visibili i pulsanti di indirizzamento
 	d3.selectAll('#GoToHeight').style("visibility","visible");
 	d3.selectAll('#GoToBlock').style("visibility","visible");
-
 
 	let height = (blockNumber/2) | 0;
 

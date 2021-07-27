@@ -342,7 +342,7 @@ class Blockchain {
 
 			if((compactChain[0].from > 0 ? this.chain.blocks[this.chain.heights[compactChain[0].from-1][0]].id : this.chain.blocks[this.chain.heights[compactChain[0].from][0]].id) === 1) {
 				g.append('circle')
-					.attr('id', 'circle'+block["id"])
+					.attr('id', 'circle1')
 					.attr('cx', height*this.dimensions)
 					.attr('cy', height*this.dimensions)
 					.attr('r', this.dimensions/5)
