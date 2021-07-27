@@ -14,6 +14,12 @@ class Blockchain {
 		this.width = width;
 		this.foundBlock = null;
 		this.foundHeights = [];
+
+//------------------Variabili globali perché le richiamo nel main--------------------
+		this.maxRenderX = 0;
+		this.maxRenderY = 0;
+//-----------------------------------------------------------------------------------
+
 	}
 
 	clear() {
@@ -22,6 +28,12 @@ class Blockchain {
 			'blocks':{},
 			'positions':[]
 		};
+
+//------------------azzero dopo un compute-------------------------------------------
+		this.maxRenderX = 0;
+		this.maxRenderY = 0;
+//-----------------------------------------------------------------------------------
+
 
 		this.forks = [];
 	}
@@ -191,6 +203,12 @@ class Blockchain {
 
 		for(let i=0; i<this.chain.heights.length; i++) {
 
+//----------------------------------qui trovo il numero massimo di blocchi per altezza-----------
+			if (this.maxRenderY < this.chain.heights[i].length)
+				this.maxRenderY = this.chain.heights[i].length
+//-----------------------------------------------------------------------------------------------
+
+
 			let blockHeights = [];
 			for(let j=0; j<this.chain.heights[i].length; j++) {
 				let block = this['chain']['blocks'][this.chain.heights[i][j]];
@@ -222,6 +240,10 @@ class Blockchain {
 
 			}
 		}
+
+//---------------------------------------qui calcolo di quanto effettivamente mi devo allontanare da y = 0-----
+		this.maxRenderY = (Math.floor(this.maxRenderY/2))*120;
+//--------------------------------------------------------------------------------------------------------------
 
 		return this.chain;
 	}
@@ -509,6 +531,11 @@ class Blockchain {
 						.html(blockText)
 				}
 
+//--------------------------------------------------------------------------------------------------------------------------------------
+				if (this.maxRenderX < height*this.dimensions)
+					this.maxRenderX = height*this.dimensions;
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 				height += distance_factor;
 			}
 
@@ -600,6 +627,12 @@ class Blockchain {
 					.attr('font-size', clusterFontSizeScale(blockText.length))
 					.attr('fill', 'white')
 					.html(blockText);
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+				if (this.maxRenderX < height*this.dimensions)
+					this.maxRenderX = height*this.dimensions;
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 			}
 
 			height ++;
